@@ -12,7 +12,7 @@ public class Navigation : MonoBehaviour {
     public float RunSpeed = 5;
     public float CrouchSpeed = 3;
 
-    private int interator = 0;
+    
 
 	// Use this for initialization
 	void Start () {

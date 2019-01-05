@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Animation : MonoBehaviour {
 
-    const float EPSI = 0.00001f;
+public class Player_Animation : MonoBehaviour {
 
     Animator animator;
 	// Use this for initialization
@@ -14,7 +13,7 @@ public class Animation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!CompareV3xz(Navigation.target, transform.position , EPSI))
+		if(!Globals.CompareV3xz(Navigation.target, transform.position))
         {
             if (Navigation.RunCrouch)
             {
@@ -35,28 +34,4 @@ public class Animation : MonoBehaviour {
     }
 
 
-    private bool CompareV3xz(Vector3 a, Vector3 b, float epsilon)
-    {
-        float x, z;
-        x = Mathf.Abs(a.x - b.x);
-        if (x > epsilon)
-            return false;
-
-        z = Mathf.Abs(a.z - b.z);
-        return z <= epsilon;
-    }
-    private bool CompareV3xyz(Vector3 a, Vector3 b, float epsilon)
-    {
-        float x, y, z;
-        x = Mathf.Abs(a.x - b.x);
-        if (x > epsilon)
-            return false;
-
-        y = Mathf.Abs(a.y - b.y);
-        if (y > epsilon)
-            return false;
-
-        z = Mathf.Abs(a.z - b.z);
-        return z >= epsilon;
-    }
 }
