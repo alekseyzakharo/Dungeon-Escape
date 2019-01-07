@@ -5,7 +5,6 @@ using UnityEngine;
 public class Guard_Animation : MonoBehaviour {
 
     public bool sleep = false;
-    public bool idle = false;
 
     Animator anim;
 
@@ -19,9 +18,9 @@ public class Guard_Animation : MonoBehaviour {
         }
         else
         {
-            idle = true;
             anim.SetBool("idle", true);
-            if (Guard_Navigation.patrol)
+            //access another script attached to this game object to check a bool val in it
+            if (gameObject.GetComponent<Guard_Navigation>().patrol)
             {
                 anim.SetBool("walk", true);
             }
@@ -33,4 +32,14 @@ public class Guard_Animation : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void Turn()
+    {
+        anim.SetBool("turn", true);
+    }
+
+    public void StopTurn()
+    {
+        anim.SetBool("turn", false);
+    }
 }
