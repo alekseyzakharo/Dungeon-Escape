@@ -38,8 +38,10 @@ public class Guard_Animation : MonoBehaviour {
         anim.SetBool("turn", true);
     }
 
-    public void StopTurn()
+    public void TurnOff()
     {
         anim.SetBool("turn", false);
     }
+
+
 }

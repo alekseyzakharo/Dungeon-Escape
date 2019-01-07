@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Globals {
     public const float EPSI = 0.00001f;
-    public const float EPSI_ANGLE = 10.0f;
+    public const float EPSI_ANGLE = 5.0f;
 
 
     public static bool CompareV3xz(Vector3 a, Vector3 b)
