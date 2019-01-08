@@ -28,14 +28,19 @@ public class Navigation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //new click on map
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                agent.SetDestination(hit.point);
-                target = hit.point;
+                //check that distance of new click is greater than CrouchIdle_Epsi, to prevent floating around
+                if(Vector3.Distance(transform.position, hit.point) >= Globals.CROUCHIDLE_EPSI)
+                {
+                    agent.SetDestination(hit.point);
+                    target = hit.point;
+                }
             }
             
         }
@@ -43,7 +48,6 @@ public class Navigation : MonoBehaviour {
         {
             if(ButtonHeld)
             {
-                Debug.Log(Time.time + " " + HoldTime);
                 if(Time.time - HoldTime >= Globals.ELAPSED_TIME)
                 {
                     if (Vector3.Distance(transform.position, agent.destination) <= Globals.CROUCHIDLE_EPSI)
