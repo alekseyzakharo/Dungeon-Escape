@@ -13,21 +13,36 @@ public class Player_Animation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!Globals.CompareV3xz(Navigation.target, transform.position))
+        //!Globals.CompareV3xz(Navigation.target, transform.position))
+        if (Vector3.Distance(Navigation.target, transform.position) >= Globals.DISTANCE_EPSI)
         {
+            //this needs to be modified
             if (Navigation.RunCrouch)
             {
+                
                 animator.SetBool("movement", false);
                 animator.SetBool("crouching", true);
             }
             else
             {
-                animator.SetBool("crouching", false);
-                animator.SetBool("movement", true);
+                if (Navigation.CrouchIdle)
+                {
+                    animator.SetBool("crouch idle", true);
+                }
+                else
+                {
+                    animator.SetBool("crouching", false);
+                    animator.SetBool("movement", true);
+                }
             }
+        }
+        else if(Navigation.CrouchIdle)
+        {
+            animator.SetBool("crouch idle", true);
         }
         else
         {
+            animator.SetBool("crouch idle", false);
             animator.SetBool("crouching", false);
             animator.SetBool("movement", false);
         }

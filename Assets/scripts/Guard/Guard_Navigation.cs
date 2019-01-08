@@ -42,7 +42,7 @@ public class Guard_Navigation : MonoBehaviour {
                 //Transform hips = transform.Find("Hips");
                 toPoint = end.position();
                 //when direction is facing destination, stop turn and set destination
-                if (Globals.IsFacingDirection(hips.forward, toPoint - hips.position))
+                if (IsFacingDirection(hips.forward, toPoint - hips.position))
                 {
                     animation.TurnOff();
                     agent.SetDestination(end.position());
@@ -53,7 +53,7 @@ public class Guard_Navigation : MonoBehaviour {
                 animation.Turn(); //activate turn animation
                 //Transform hips = transform.Find("Hips");
                 toPoint = start.position();
-                if (Globals.IsFacingDirection(hips.forward, toPoint - hips.position))
+                if (IsFacingDirection(hips.forward, toPoint - hips.position))
                 {
                     animation.TurnOff();
                     agent.SetDestination(start.position());
@@ -61,6 +61,12 @@ public class Guard_Navigation : MonoBehaviour {
             }
         }
 	}
+
+    //return true if the angle between the 2 vectors is less than EPSI_ANGLE
+    private bool IsFacingDirection(Vector3 a, Vector3 b)
+    {
+        return Vector3.Angle(a, b) < Globals.EPSI_ANGLE;
+    }
 
     public void Turn90Degrees()
     {
