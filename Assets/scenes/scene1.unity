@@ -993,6 +993,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sleep: 0
+  idleSpeed: 75
 --- !u!114 &582763749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1005,7 +1006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8604af305492e24d9880626ce4b8420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrol: 1
+  patrol: 0
   endPos: {fileID: 315166108}
 --- !u!95 &582763750
 Animator:
@@ -2891,6 +2892,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sleep: 0
+  idleSpeed: 0
 --- !u!114 &1482971278
 MonoBehaviour:
   m_ObjectHideFlags: 0

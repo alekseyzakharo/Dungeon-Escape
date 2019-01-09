@@ -5,6 +5,8 @@ using UnityEngine;
 public class Guard_Animation : MonoBehaviour {
 
     public bool sleep = false;
+    [Range(0, 100)]
+    public float idleSpeed;
 
     Animator anim;
 
@@ -19,6 +21,7 @@ public class Guard_Animation : MonoBehaviour {
         else
         {
             anim.SetBool("idle", true);
+            anim.speed = idleSpeed / 100;
             //access another script attached to this game object to check a bool val in it
             if (gameObject.GetComponent<Guard_Navigation>().patrol)
             {

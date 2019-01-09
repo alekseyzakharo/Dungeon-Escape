@@ -17,16 +17,25 @@ public class Guard_FieldOfView : MonoBehaviour {
     public float meshResolution;
     public int edgeResolveIterations;
 
-    public MeshFilter viewMeshFilter;
+    //public MeshFilter viewMeshFilter;
     Mesh viewMesh;
+
+    LineRenderer lineRender;
+    public Material lineMat;
+    [Range(0,100)]
+    public float viewLineWidth;
 
     private Transform hips;
 
     void Start()
     {
+        lineRender = GetComponent<LineRenderer>();
+        lineRender.material = lineMat;
+        lineRender.widthMultiplier = viewLineWidth / 100;
+
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
-        viewMeshFilter.mesh = viewMesh;
+        //viewMeshFilter.mesh = viewMesh;
 
         hips = transform.parent.Find("Hips");
 
@@ -35,13 +44,16 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     void Update()
     {
-        transform.rotation = hips.rotation;
+        DrawFieldOfView();
+        //transform.rotation = hips.rotation;
     }
 
     void LateUpdate()
     {
-        DrawFieldOfView();
+        //DrawFieldOfView();
     }
+
+    
 
 
     IEnumerator FindTargetsWithDelay(float delay)
@@ -63,7 +75,8 @@ public class Guard_FieldOfView : MonoBehaviour {
             Transform target = targetsInViewRadius[i].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             //check if angle between yourself and the target is less than  your view angle
-            if(Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
+            //if(Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
+            if (Vector3.Angle(hips.forward, directionToTarget) < viewAngle / 2)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
@@ -86,7 +99,7 @@ public class Guard_FieldOfView : MonoBehaviour {
         ViewCastInfo oldViewCast = new ViewCastInfo();
         for(int i =0;i <= stepCount; i++)
         {
-            float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
+            float angle = hips.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
             ViewCastInfo newViewCast = ViewCast(angle);
        
             if(i > 0)
@@ -114,22 +127,33 @@ public class Guard_FieldOfView : MonoBehaviour {
         int[] triangles = new int[(vertexCount - 2) * 3];
 
         vertices[0] = Vector3.zero;
-        for(int i = 0;i < vertexCount-1; i++)
+        Vector3 pointA, pointB;
+        //pointA = Quaternion.AngleAxis(90, Vector3.up) * viewPoints[0];
+        pointA = hips.transform.position;
+        lineRender.positionCount = vertexCount;
+        lineRender.SetPosition(0, pointA);
+        Debug.Log(pointA);
+        for (int i = 0; i < vertexCount-1; i++)
         {
-            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+            pointB = Quaternion.Euler(hips.eulerAngles) * transform.InverseTransformPoint(viewPoints[i]);
+            //pointB = Quaternion.AngleAxis(90, Vector3.up) * transform.InverseTransformPoint(viewPoints[i]);
+            pointB += hips.transform.position;
 
-            if(i < vertexCount -2)
-            {
-                triangles[i * 3] = 0;
-                triangles[i * 3 + 1] = i + 1;
-                triangles[i * 3 + 2] = i + 2;
-            }
+            lineRender.SetPosition(i+1, pointB);
+            //vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+
+            //if (i < vertexCount - 2)
+            //{
+            //triangles[i * 3] = 0;
+            //triangles[i * 3 + 1] = i + 1;
+            //triangles[i * 3 + 2] = i + 2;
+            //}
         }
-
-        viewMesh.Clear();
-        viewMesh.vertices = vertices;
-        viewMesh.triangles = triangles;
-        viewMesh.RecalculateNormals();
+        lineRender.SetPosition(lineRender.positionCount-1, hips.transform.position);
+        //viewMesh.Clear();
+        //viewMesh.vertices = vertices;
+        //viewMesh.triangles = triangles;
+        //viewMesh.RecalculateNormals();
     }
 
     EdgeInfo FindEdge(ViewCastInfo minViewcast, ViewCastInfo maxViewCast)
@@ -178,7 +202,7 @@ public class Guard_FieldOfView : MonoBehaviour {
     {
         if(!angleIsGlobal)
         {
-            angleInDegrees += transform.eulerAngles.y;
+            angleInDegrees += hips.eulerAngles.y;
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
