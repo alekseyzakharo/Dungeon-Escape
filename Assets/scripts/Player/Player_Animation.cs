@@ -8,44 +8,64 @@ public class Player_Animation : MonoBehaviour {
     Animator animator;
 	// Use this for initialization
 	void Start () {
-        animator = GameObject.Find("T-pose_Player").GetComponent<Animator>();
+        animator = transform.Find("T-pose_Player").GetComponent<Animator>();
 	}
 	
-	// Update is called once per frame
 	void Update () {
-        //!Globals.CompareV3xz(Navigation.target, transform.position))
-        if (Vector3.Distance(Navigation.target, transform.position) >= Globals.DISTANCE_EPSI)
+        float destinationDist = Globals.DistanceV3xz(Navigation.Destination, transform.position);
+        if(Input.GetKey(KeyCode.Mouse0))
         {
-            //this needs to be modified
-            if (Navigation.RunCrouch)
+            if(destinationDist > Globals.CROUCHIDLE_EPSI)
             {
-                
-                animator.SetBool("movement", false);
-                animator.SetBool("crouching", true);
+                animator.SetBool("crouch idle", false);
+                animator.SetBool("crouch walk", true);         
             }
             else
             {
-                if (Navigation.CrouchIdle)
-                {
-                    animator.SetBool("crouch idle", true);
-                }
-                else
-                {
-                    animator.SetBool("crouching", false);
-                    animator.SetBool("movement", true);
-                }
+                animator.SetBool("crouch idle", true);
             }
-        }
-        else if(Navigation.CrouchIdle)
-        {
-            animator.SetBool("crouch idle", true);
         }
         else
         {
-            animator.SetBool("crouch idle", false);
-            animator.SetBool("crouching", false);
-            animator.SetBool("movement", false);
+            if(destinationDist > Globals.CROUCHIDLE_EPSI)
+            {
+                animator.SetBool("run", true);
+            }
+            else
+            {
+                animator.SetBool("crouch idle", false);
+                animator.SetBool("crouch walk", false);
+                animator.SetBool("run", false);
+            }
         }
+
+
+        //if(Navigation.inputPressed)
+        //{
+        //    if(Navigation.CrouchIdle)
+        //    {
+        //        animator.SetBool("crouch idle", true);
+        //    }
+        //    else
+        //    {
+        //        animator.SetBool("movement", false);
+        //        animator.SetBool("crouching", true);
+        //    }
+        //}
+        //else
+        //{
+        //    if(Globals.DistanceV3xz(Navigation.Destination, transform.position) >= Globals.DISTANCE_EPSI)
+        //    {
+        //        animator.SetBool("crouching", false);
+        //        animator.SetBool("movement", true);
+        //    }
+        //    else
+        //    {
+        //        animator.SetBool("crouch idle", false);
+        //        animator.SetBool("crouching", false);
+        //        animator.SetBool("movement", false);
+        //    }
+        //}
     }
 
 

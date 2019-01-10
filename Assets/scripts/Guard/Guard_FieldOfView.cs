@@ -37,7 +37,7 @@ public class Guard_FieldOfView : MonoBehaviour {
         viewMesh.name = "View Mesh";
         //viewMeshFilter.mesh = viewMesh;
 
-        hips = transform.parent.Find("Hips");
+        hips = transform;
 
         StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
@@ -45,7 +45,7 @@ public class Guard_FieldOfView : MonoBehaviour {
     void Update()
     {
         DrawFieldOfView();
-        //transform.rotation = hips.rotation;
+        
     }
 
     void LateUpdate()
@@ -93,6 +93,7 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     void DrawFieldOfView()
     {
+        lineRender.positionCount = 0;
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
         float stepAngleSize = viewAngle / stepCount;
         List<Vector3> viewPoints = new List<Vector3>();
@@ -132,7 +133,6 @@ public class Guard_FieldOfView : MonoBehaviour {
         pointA = hips.transform.position;
         lineRender.positionCount = vertexCount;
         lineRender.SetPosition(0, pointA);
-        Debug.Log(pointA);
         for (int i = 0; i < vertexCount-1; i++)
         {
             pointB = Quaternion.Euler(hips.eulerAngles) * transform.InverseTransformPoint(viewPoints[i]);
@@ -154,7 +154,19 @@ public class Guard_FieldOfView : MonoBehaviour {
         //viewMesh.vertices = vertices;
         //viewMesh.triangles = triangles;
         //viewMesh.RecalculateNormals();
+
+        //Call Detect Enemy
+        //DetectEnemy(vertexCount);
     }
+
+    void DetectEnemy(int vertextcount)
+    {
+        for(int i = 0 ; i < visibleTargets.Capacity ; i++)
+        {
+            //lineRender.SetPosition(vertextcount + i, visibleTargets[i].position);
+        }
+    }
+
 
     EdgeInfo FindEdge(ViewCastInfo minViewcast, ViewCastInfo maxViewCast)
     {

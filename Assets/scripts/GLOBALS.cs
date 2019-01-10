@@ -13,29 +13,12 @@ public static class Globals {
 
     public const float ELAPSED_TIME = 0.002f;
 
-    public static bool CompareV3xz(Vector3 a, Vector3 b)
+    public static float DistanceV3xz(Vector3 a, Vector3 b)
     {
-        float x, z;
-        x = Mathf.Abs(a.x - b.x);
-        if (x > EPSI)
-            return false;
-
-        z = Mathf.Abs(a.z - b.z);
-        return z <= EPSI;
+        float x = a.x - b.x;
+        float z = a.z - b.z;
+        return Mathf.Sqrt((x * x) + (z * z));
     }
-    public static bool CompareV3xyz(Vector3 a, Vector3 b, float epsilon)
-    {
-        float x, y, z;
-        x = Mathf.Abs(a.x - b.x);
-        if (x > epsilon)
-            return false;
-
-        y = Mathf.Abs(a.y - b.y);
-        if (y > epsilon)
-            return false;
-
-        z = Mathf.Abs(a.z - b.z);
-        return z >= epsilon;
-    }
+  
 
 }

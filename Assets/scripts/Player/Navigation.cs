@@ -5,13 +5,15 @@ using UnityEngine.AI;
 
 public class Navigation : MonoBehaviour {
 
-    public static Vector3 target;
+    public static Vector3 Destination;
     public static bool RunCrouch;
     public static bool CrouchIdle;
 
-    private float HoldTime;
+    public static bool inputPressed;
 
     NavMeshAgent agent;
+    [Range(0,100)]
+    public float NewDestinationDelay = 0;
     public float RunSpeed = 5;
     public float CrouchSpeed = 3;
 
@@ -19,9 +21,8 @@ public class Navigation : MonoBehaviour {
 	void Start () {
         RunCrouch = false;
         CrouchIdle = false;
-        HoldTime = 0;
         agent = GetComponent<NavMeshAgent>();
-        target = transform.position;
+        Destination = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -33,44 +34,30 @@ public class Navigation : MonoBehaviour {
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                //check that distance of new click is greater than CrouchIdle_Epsi, to prevent floating around
-                if(Vector3.Distance(transform.position, hit.point) >= Globals.CROUCHIDLE_EPSI)
+                NavMeshPath path = new NavMeshPath();
+                agent.CalculatePath(hit.point, path);
+
+                if(path.status == NavMeshPathStatus.PathComplete)
                 {
-                    agent.SetDestination(hit.point);
-                    target = hit.point;
+                    //check that distance of new click is greater than CrouchIdle_Epsi, to prevent floating around
+                    if (Globals.DistanceV3xz(transform.position, hit.point) >= Globals.CROUCHIDLE_EPSI)
+                    {
+                        StartCoroutine("SetNewDestination", hit.point);
+                    }
                 }
             }
-            
         }
-        if(Input.GetKey(KeyCode.Mouse0))
-        {
+    }
 
-            if (Vector3.Distance(transform.position, agent.destination) <= Globals.CROUCHIDLE_EPSI)
-            {
-                CrouchIdle = true;
-            }
-            else
-            {
-                RunCrouch = true;
-                agent.speed = CrouchSpeed;
-            }
+    IEnumerator SetNewDestination(Vector3 destination)
+    {
+        yield return new WaitForSeconds(NewDestinationDelay/100);
+        SetDestination(destination);
+    }
 
-            ////check if your location is near your last destination, if true you are standing still
-            //if (Vector3.Distance(transform.position, agent.destination) <= Globals.CROUCHIDLE_EPSI)
-            //{
-            //    CrouchIdle = true;
-            //}
-            //else
-            //{
-            //    RunCrouch = true;
-            //    agent.speed = CrouchSpeed;
-            //}
-        }
-        else
-        {
-            RunCrouch = false;
-            CrouchIdle = false;
-            agent.speed = RunSpeed;
-        }
+    private void SetDestination(Vector3 destination)
+    {
+        agent.SetDestination(destination);
+        Destination = destination;
     }
 }

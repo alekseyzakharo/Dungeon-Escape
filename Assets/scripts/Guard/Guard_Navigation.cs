@@ -36,7 +36,7 @@ public class Guard_Navigation : MonoBehaviour {
         
 		if(patrol && endPos != null)
         {
-            if (Globals.CompareV3xz(transform.position, start.position()))
+            if (Globals.DistanceV3xz(transform.position, start.position()) <= Globals.EPSI)
             {
                 animation.Turn(); //activate turn animation
                 //Transform hips = transform.Find("Hips");
@@ -48,7 +48,7 @@ public class Guard_Navigation : MonoBehaviour {
                     agent.SetDestination(end.position());
                 }
             }
-            else if(Globals.CompareV3xz(transform.position, endPos.position))
+            else if(Globals.DistanceV3xz(transform.position, endPos.position) <= Globals.EPSI)
             {
                 animation.Turn(); //activate turn animation
                 //Transform hips = transform.Find("Hips");
