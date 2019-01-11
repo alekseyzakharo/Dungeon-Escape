@@ -1,0 +1,351 @@
+fileFormatVersion: 2
+guid: bcd0989b19d7dae44a56bb3802cfb619
+timeCreated: 1547235015
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: _Wall_Column_End
+    100002: ANIM_handle
+    100004: big_column
+    100006: Big_torch
+    100008: Body
+    100010: Carpet
+    100012: carpet
+    100014: chain
+    100016: Chain_
+    100018: chain_2
+    100020: Chain_2_
+    100022: Column
+    100024: Column_2
+    100026: Column_3
+    100028: column_wall_end
+    100030: COPY__PACAMERA_Tomasz_Bar
+    100032: Corner_Full
+    100034: corner_full
+    100036: Crypt
+    100038: crypt
+    100040: crypt_top
+    100042: cubes
+    100044: cubes_2
+    100046: Door
+    100048: Door_2
+    100050: end
+    100052: Handle
+    100054: Jar
+    100056: jar
+    100058: legs
+    100060: LEVEL
+    100062: //RootNode
+    100064: Lever_
+    100066: metal_handle
+    100068: Pieces_1
+    100070: Pieces_1_2
+    100072: Pieces_2
+    100074: Pieces_2_2
+    100076: Pieces_3
+    100078: Pieces_3_2
+    100080: Pieces_4
+    100082: Pieces_5
+    100084: Stairs
+    100086: stairs
+    100088: Torch
+    100090: Torch_2
+    100092: Wall
+    100094: wall
+    100096: Wall_2
+    100098: wall_bottom
+    100100: Wall_Column_Big
+    100102: Wall_Column_Middle
+    100104: Wall_Down
+    100106: wall_top
+    100108: Wood
+    100110: wood
+    400000: _Wall_Column_End
+    400002: ANIM_handle
+    400004: big_column
+    400006: Big_torch
+    400008: Body
+    400010: Carpet
+    400012: carpet
+    400014: chain
+    400016: Chain_
+    400018: chain_2
+    400020: Chain_2_
+    400022: Column
+    400024: Column_2
+    400026: Column_3
+    400028: column_wall_end
+    400030: COPY__PACAMERA_Tomasz_Bar
+    400032: Corner_Full
+    400034: corner_full
+    400036: Crypt
+    400038: crypt
+    400040: crypt_top
+    400042: cubes
+    400044: cubes_2
+    400046: Door
+    400048: Door_2
+    400050: end
+    400052: Handle
+    400054: Jar
+    400056: jar
+    400058: legs
+    400060: LEVEL
+    400062: //RootNode
+    400064: Lever_
+    400066: metal_handle
+    400068: Pieces_1
+    400070: Pieces_1_2
+    400072: Pieces_2
+    400074: Pieces_2_2
+    400076: Pieces_3
+    400078: Pieces_3_2
+    400080: Pieces_4
+    400082: Pieces_5
+    400084: Stairs
+    400086: stairs
+    400088: Torch
+    400090: Torch_2
+    400092: Wall
+    400094: wall
+    400096: Wall_2
+    400098: wall_bottom
+    400100: Wall_Column_Big
+    400102: Wall_Column_Middle
+    400104: Wall_Down
+    400106: wall_top
+    400108: Wood
+    400110: wood
+    2300000: big_column
+    2300002: Body
+    2300004: carpet
+    2300006: chain
+    2300008: chain_2
+    2300010: Column
+    2300012: Column_3
+    2300014: column_wall_end
+    2300016: corner_full
+    2300018: crypt
+    2300020: crypt_top
+    2300022: cubes
+    2300024: cubes_2
+    2300026: Door_2
+    2300028: end
+    2300030: Handle
+    2300032: jar
+    2300034: legs
+    2300036: metal_handle
+    2300038: Pieces_1
+    2300040: Pieces_1_2
+    2300042: Pieces_2
+    2300044: Pieces_2_2
+    2300046: Pieces_3
+    2300048: Pieces_3_2
+    2300050: Pieces_4
+    2300052: Pieces_5
+    2300054: stairs
+    2300056: Torch_2
+    2300058: wall
+    2300060: Wall_2
+    2300062: wall_bottom
+    2300064: wall_top
+    2300066: wood
+    3300000: big_column
+    3300002: Body
+    3300004: carpet
+    3300006: chain
+    3300008: chain_2
+    3300010: Column
+    3300012: Column_3
+    3300014: column_wall_end
+    3300016: corner_full
+    3300018: crypt
+    3300020: crypt_top
+    3300022: cubes
+    3300024: cubes_2
+    3300026: Door_2
+    3300028: end
+    3300030: Handle
+    3300032: jar
+    3300034: legs
+    3300036: metal_handle
+    3300038: Pieces_1
+    3300040: Pieces_1_2
+    3300042: Pieces_2
+    3300044: Pieces_2_2
+    3300046: Pieces_3
+    3300048: Pieces_3_2
+    3300050: Pieces_4
+    3300052: Pieces_5
+    3300054: stairs
+    3300056: Torch_2
+    3300058: wall
+    3300060: Wall_2
+    3300062: wall_bottom
+    3300064: wall_top
+    3300066: wood
+    4300000: metal_handle
+    4300002: carpet
+    4300004: wall
+    4300006: Column
+    4300008: big_column
+    4300010: column_wall_end
+    4300012: Wall_2
+    4300014: cubes
+    4300016: chain
+    4300018: chain_2
+    4300020: end
+    4300022: cubes_2
+    4300024: Handle
+    4300026: Body
+    4300028: jar
+    4300030: legs
+    4300032: Pieces_1
+    4300034: Pieces_2
+    4300036: Pieces_3
+    4300038: Pieces_4
+    4300040: Pieces_5
+    4300042: Pieces_1_2
+    4300044: Pieces_2_2
+    4300046: Pieces_3_2
+    4300048: Torch_2
+    4300050: crypt_top
+    4300052: crypt
+    4300054: wood
+    4300056: stairs
+    4300058: Door_2
+    4300060: wall_bottom
+    4300062: wall_top
+    4300064: corner_full
+    4300066: Column_3
+    7400000: C4D Animation Take
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Clay-1
+    second: {fileID: 2100000, guid: 6a5554cb126bcd94a90f7eac9a2906e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Clay-2
+    second: {fileID: 2100000, guid: 24e4d9be4952992459eb19f1913655af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fabric
+    second: {fileID: 2100000, guid: 2c62284da792fc048a6a2fd15a885842, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor-1
+    second: {fileID: 2100000, guid: 8e783f7c3e1501a4ea5224ccc49cf391, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Old Metal-1
+    second: {fileID: 2100000, guid: b07274ec80e9fb84ca34eabaf3812e8e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Old Metal-2
+    second: {fileID: 2100000, guid: bec5fa7a9f5e73c448a739196b79e237, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stone-1
+    second: {fileID: 2100000, guid: c4317c8c80e47f243b591d0f5f0055b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stone-2
+    second: {fileID: 2100000, guid: c99175bfb97a47a41bcb97d304e4ed0d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stone-3
+    second: {fileID: 2100000, guid: 6d70602f8d2b10d4fb39cafe2da7bf2f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wood-1
+    second: {fileID: 2100000, guid: a8bcc06e5af6fd14e8f06791bdbeb759, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
