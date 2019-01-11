@@ -22,6 +22,7 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     LineRenderer lineRender;
     public Material lineMat;
+    public Material enemyMat;
     [Range(0,100)]
     public float viewLineWidth;
 
@@ -93,7 +94,6 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     void DrawFieldOfView()
     {
-        lineRender.positionCount = 0;
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
         float stepAngleSize = viewAngle / stepCount;
         List<Vector3> viewPoints = new List<Vector3>();
@@ -156,15 +156,23 @@ public class Guard_FieldOfView : MonoBehaviour {
         //viewMesh.RecalculateNormals();
 
         //Call Detect Enemy
-        //DetectEnemy(vertexCount);
+        //DetectEnemy();
     }
 
-    void DetectEnemy(int vertextcount)
+    void DetectEnemy()
     {
-        for(int i = 0 ; i < visibleTargets.Capacity ; i++)
+        GameObject tmp = new GameObject("lineObj");
+        LineRenderer render = tmp.AddComponent<LineRenderer>();
+        render.material = enemyMat;
+        render.widthMultiplier = viewLineWidth / 100;
+        lineRender.positionCount = visibleTargets.Capacity+1;
+        lineRender.SetPosition(0, hips.transform.position);
+
+        for (int i = 1 ; i < visibleTargets.Capacity ; i++)
         {
-            //lineRender.SetPosition(vertextcount + i, visibleTargets[i].position);
+            lineRender.SetPosition(i, visibleTargets[i].position);
         }
+        Destroy(tmp);
     }
 
 

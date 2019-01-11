@@ -1,0 +1,154 @@
+fileFormatVersion: 2
+guid: a533df8551b837a479ce39b9b674d791
+timeCreated: 1543841241
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: floor
+    100002: floorP
+    100004: //RootNode
+    100006: pillar
+    100008: pillarP
+    100010: wall
+    100012: wallP
+    100014: Circle
+    100016: Circle_001
+    100018: Circle_002
+    100020: Circle_003
+    100022: Circle_004
+    100024: Circle_005
+    100026: Circle.001
+    100028: Circle.002
+    100030: Circle.003
+    100032: Circle.004
+    100034: Circle.005
+    400000: floor
+    400002: floorP
+    400004: //RootNode
+    400006: pillar
+    400008: pillarP
+    400010: wall
+    400012: wallP
+    400014: Circle
+    400016: Circle_001
+    400018: Circle_002
+    400020: Circle_003
+    400022: Circle_004
+    400024: Circle_005
+    400026: Circle.001
+    400028: Circle.002
+    400030: Circle.003
+    400032: Circle.004
+    400034: Circle.005
+    2300000: floor
+    2300002: floorP
+    2300004: pillar
+    2300006: pillarP
+    2300008: wall
+    2300010: wallP
+    2300012: Circle
+    2300014: Circle_001
+    2300016: Circle_002
+    2300018: Circle_003
+    2300020: Circle_004
+    2300022: Circle_005
+    2300024: Circle.001
+    2300026: Circle.002
+    2300028: Circle.003
+    2300030: Circle.004
+    2300032: Circle.005
+    3300000: floor
+    3300002: floorP
+    3300004: pillar
+    3300006: pillarP
+    3300008: wall
+    3300010: wallP
+    3300012: Circle
+    3300014: Circle_001
+    3300016: Circle_002
+    3300018: Circle_003
+    3300020: Circle_004
+    3300022: Circle_005
+    3300024: Circle.001
+    3300026: Circle.002
+    3300028: Circle.003
+    3300030: Circle.004
+    3300032: Circle.005
+    4300000: wall
+    4300002: floor
+    4300004: floorP
+    4300006: wallP
+    4300008: pillarP
+    4300010: pillar
+    4300012: Circle_005
+    4300014: Circle_001
+    4300016: Circle_003
+    4300018: Circle_002
+    4300020: Circle
+    4300022: Circle_004
+    4300024: Circle.005
+    4300026: Circle.001
+    4300028: Circle.003
+    4300030: Circle.002
+    4300032: Circle.004
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
