@@ -36,14 +36,20 @@ public class Guard_Animation : MonoBehaviour {
 		
 	}
 
-    public void Turn()
+    public void TurnRight()
     {
-        anim.SetBool("turn", true);
+        anim.SetBool("turn right", true);
+    }
+
+    public void TurnLeft()
+    {
+        anim.SetBool("turn left", true);
     }
 
     public void TurnOff()
     {
-        anim.SetBool("turn", false);
+        anim.SetBool("turn right", false);
+        anim.SetBool("turn left", false);
     }
 
 

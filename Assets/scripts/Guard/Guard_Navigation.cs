@@ -15,7 +15,7 @@ public class Guard_Navigation : MonoBehaviour {
     CopyTransform start;
     CopyTransform end;
 
-    Vector3 toPoint;
+    private bool turning;
 
     NavMeshAgent agent;
 
@@ -27,6 +27,7 @@ public class Guard_Navigation : MonoBehaviour {
         hips = transform.Find("Hips");
         if (patrol)
         {
+            turning = false;
             end = new CopyTransform(endPos);
         }       
     }
@@ -38,29 +39,53 @@ public class Guard_Navigation : MonoBehaviour {
         {
             if (Globals.DistanceV3xz(transform.position, start.position()) <= Globals.EPSI)
             {
-                animation.Turn(); //activate turn animation
-                //Transform hips = transform.Find("Hips");
-                toPoint = end.position();
+                Vector3 toVec = end.position() - hips.position;
+                //determine which direction to turn
+                if (!turning && Vector3.Angle(hips.forward, toVec) > 180)
+                {
+                    animation.TurnRight(); //activate turn animation
+                    turning = true;
+                }
+                else if(!turning)
+                {
+                    animation.TurnLeft(); //activate turn animation
+                    turning = true;
+                }
+                
                 //when direction is facing destination, stop turn and set destination
-                if (IsFacingDirection(hips.forward, toPoint - hips.position))
+                if (IsFacingDirection(hips.forward, toVec))
                 {
                     animation.TurnOff();
                     agent.SetDestination(end.position());
+                    turning = false;
                 }
             }
             else if(Globals.DistanceV3xz(transform.position, endPos.position) <= Globals.EPSI)
             {
-                animation.Turn(); //activate turn animation
-                //Transform hips = transform.Find("Hips");
-                toPoint = start.position();
-                if (IsFacingDirection(hips.forward, toPoint - hips.position))
+                Vector3 toVec = start.position() - hips.position;
+                //determine which direction to turn
+                if (!turning && Vector3.Angle(hips.forward, toVec) > 180)
+                {
+                    animation.TurnRight(); //activate turn animation
+                    turning = true;
+                }
+                else if(!turning)
+                {
+                    animation.TurnLeft(); //activate turn animation
+                    turning = true;
+                }
+
+                if (IsFacingDirection(hips.forward, toVec))
                 {
                     animation.TurnOff();
                     agent.SetDestination(start.position());
+                    turning = false;
                 }
             }
         }
 	}
+
+    
 
     //return true if the angle between the 2 vectors is less than EPSI_ANGLE
     private bool IsFacingDirection(Vector3 a, Vector3 b)
@@ -68,7 +93,12 @@ public class Guard_Navigation : MonoBehaviour {
         return Vector3.Angle(a, b) < Globals.EPSI_ANGLE;
     }
 
-    public void Turn90Degrees()
+    public void TurnRight90Degrees()
+    {
+        transform.Rotate(new Vector3(0, 90, 0));
+    }
+
+    public void TurnLeft90Degrees()
     {
         transform.Rotate(new Vector3(0, 90, 0));
     }

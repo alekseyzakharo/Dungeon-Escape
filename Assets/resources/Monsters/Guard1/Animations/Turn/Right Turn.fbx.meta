@@ -152,7 +152,7 @@ ModelImporter:
       curves: []
       events:
       - time: 1
-        functionName: Turn90Degrees
+        functionName: TurnRight90Degrees
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: b8604af305492e24d9880626ce4b8420,
           type: 3}
