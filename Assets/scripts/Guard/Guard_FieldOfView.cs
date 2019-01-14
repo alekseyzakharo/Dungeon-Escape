@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Guard_FieldOfView : MonoBehaviour {
 
+    public float detectRadius;
     public float viewRadius;
     [Range(0,360)]
     public float viewAngle;
@@ -17,28 +18,23 @@ public class Guard_FieldOfView : MonoBehaviour {
     public float meshResolution;
     public int edgeResolveIterations;
 
+    public MeshFilter detectMeshFilter;
     public MeshFilter viewMeshFilter;
+    Mesh detectMesh;
     Mesh viewMesh;
 
-    LineRenderer lineRender;
-    public Material lineMat;
     public Material enemyMat;
-    [Range(0,100)]
-    public float viewLineWidth;
-
-    private Transform hips;
 
     void Start()
     {
-        lineRender = GetComponent<LineRenderer>();
-        lineRender.material = lineMat;
-        lineRender.widthMultiplier = viewLineWidth / 100;
-
+        detectMesh = new Mesh();
         viewMesh = new Mesh();
-        viewMesh.name = "View Mesh";
-        viewMeshFilter.mesh = viewMesh;
 
-        hips = transform;
+        detectMesh.name = "Detect Mesh";
+        viewMesh.name = "View Mesh";
+
+        detectMeshFilter.mesh = detectMesh;
+        viewMeshFilter.mesh = viewMesh;
 
         StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
@@ -48,14 +44,6 @@ public class Guard_FieldOfView : MonoBehaviour {
         DrawFieldOfView();
         
     }
-
-    void LateUpdate()
-    {
-        //DrawFieldOfView();
-    }
-
-    
-
 
     IEnumerator FindTargetsWithDelay(float delay)
     {
@@ -70,7 +58,7 @@ public class Guard_FieldOfView : MonoBehaviour {
     {
         visibleTargets.Clear();
         //find all targets around
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, detectRadius, targetMask);
         for(int i = 0;i<targetsInViewRadius.Length;i++)
         {
             Transform target = targetsInViewRadius[i].transform;
@@ -87,25 +75,21 @@ public class Guard_FieldOfView : MonoBehaviour {
                     //trigger chase target............
                     visibleTargets.Add(target);
                 }
-
             }
         }
     }
 
     void DrawFieldOfView()
     {
-        
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
         float stepAngleSize = viewAngle / stepCount;
+
         List<Vector3> viewPoints = new List<Vector3>();
+        List<Vector3> detectPoints = new List<Vector3>();
+
         ViewCastInfo oldViewCast = new ViewCastInfo();
-        int m = 6; //DELETE
         for(int i =0;i <= stepCount; i++)
         {
-            if(i == 1)
-            {
-                m++;
-            }
             float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
             ViewCastInfo newViewCast = ViewCast(angle);
        
@@ -116,79 +100,90 @@ public class Guard_FieldOfView : MonoBehaviour {
                     EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
                     if(edge.pointA != Vector3.zero)
                     {
-                        viewPoints.Add(edge.pointA);
+                        AddPoint(ref viewPoints, ref detectPoints, edge.pointA);
+                        //viewPoints.Add(edge.pointA);
                     }
                     if(edge.pointB != Vector3.zero)
                     {
-                        viewPoints.Add(edge.pointB);
+                        AddPoint(ref viewPoints, ref detectPoints, edge.pointB);
+                        //viewPoints.Add(edge.pointB);
                     }
                 }
             }
-
-
-            viewPoints.Add(newViewCast.point);
+            AddPoint(ref viewPoints, ref detectPoints, newViewCast.point);
+            //viewPoints.Add(newViewCast.point);
             oldViewCast = newViewCast;
         }
-        int vertexCount = viewPoints.Count + 1;
-        Vector3[] vertices = new Vector3[vertexCount];
-        int[] triangles = new int[(vertexCount - 2) * 3];
 
-        vertices[0] = Vector3.zero;
-        Vector3 pointA, pointB;
-        //pointA = Quaternion.AngleAxis(90, Vector3.up) * viewPoints[0];
-        pointA = transform.position;
-        //lineRender.positionCount = vertexCount;
-        //lineRender.SetPosition(0, pointA);
-        int j = 6;
-        for (int i = 0; i < vertexCount-1; i++)
+        int viewVertexCount = viewPoints.Count + 1;
+        int detectVertextCount = detectPoints.Count + viewPoints.Count;
+
+        Vector3[] viewVertices = new Vector3[viewVertexCount];
+        Vector3[] detectVertices = new Vector3[detectVertextCount];
+
+        int[] viewTriangles = new int[(viewVertexCount - 2) * 3];
+        int[] detectTriangles = new int[(detectVertextCount - 2) * 3];
+
+        viewVertices[0] = Vector3.zero;
+        int iterator = 0;
+        for (int i = 0; i < viewVertexCount - 1; i++)
         {
-            ////if(i == 0)
-            ////{
-            ////    j++;
-            ////}
-            ////pointB = viewPoints[i];
-            //pointB = transform.InverseTransformPoint(viewPoints[i]);
-            //pointB = Quaternion.Euler(transform.eulerAngles) * transform.InverseTransformPoint(viewPoints[i]);
-            //pointB = Quaternion.AngleAxis(90, Vector3.up) * transform.InverseTransformPoint(viewPoints[i]);
-            //pointB += transform.position;
-
-            ////lineRender.SetPosition(i+1, pointB);
-            vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
-
-            if (i < vertexCount - 2)
+            viewVertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+            if (i < viewVertexCount - 2)
             {
-            triangles[i * 3] = 0;
-            triangles[i * 3 + 1] = i + 1;
-            triangles[i * 3 + 2] = i + 2;
+                viewTriangles[i * 3] = 0;
+                viewTriangles[i * 3 + 1] = i + 1;
+                viewTriangles[i * 3 + 2] = i + 2;
             }
+
+            detectVertices[iterator++] = transform.InverseTransformPoint(viewPoints[i]);
+            detectVertices[iterator++] = transform.InverseTransformPoint(detectPoints[i]);
+
         }
-        ////lineRender.SetPosition(lineRender.positionCount-1, hips.position);
         viewMesh.Clear();
-        viewMesh.vertices = vertices;
-        viewMesh.triangles = triangles;
+        viewMesh.vertices = viewVertices;
+        viewMesh.triangles = viewTriangles;
         viewMesh.RecalculateNormals();
 
-        //Call Detect Enemy
-        //DetectEnemy();
-    }
-
-    void DetectEnemy()
-    {
-        GameObject tmp = new GameObject("lineObj");
-        LineRenderer render = tmp.AddComponent<LineRenderer>();
-        render.material = enemyMat;
-        render.widthMultiplier = viewLineWidth / 100;
-        lineRender.positionCount = visibleTargets.Capacity+1;
-        lineRender.SetPosition(0, transform.transform.position);
-
-        for (int i = 1 ; i < visibleTargets.Capacity ; i++)
+        for(int i = 0;i < detectVertextCount - 1;i+=2)
         {
-            lineRender.SetPosition(i, visibleTargets[i].position);
+
+            if(i < detectVertextCount - 2)
+            {
+                detectTriangles[i * 3] = i;
+                detectTriangles[i * 3 + 1] = i + 1;
+                detectTriangles[i * 3 + 2] = i + 3;
+
+                detectTriangles[i * 3 + 3] = i;
+                detectTriangles[i * 3 + 4] = i + 3;
+                detectTriangles[i * 3 + 5] = i + 2;
+            }
         }
-        Destroy(tmp);
+
+        detectMesh.Clear();
+        detectMesh.vertices = detectVertices;
+        detectMesh.triangles = detectTriangles;
+        detectMesh.RecalculateNormals();
+
     }
 
-
+    void AddPoint(ref List<Vector3> viewPoints, ref List<Vector3> detectPoints, Vector3 point)
+    {
+        float distance = Vector3.Distance(transform.position, point);
+        if (distance > viewRadius)
+        {
+            float time = viewRadius / distance;
+            Vector3 dir = point - transform.position;
+            viewPoints.Add(transform.position + (dir * time));
+            detectPoints.Add(point);
+        }
+        else
+        {
+            viewPoints.Add(point);
+            detectPoints.Add(point);
+        }
+    }
+  
     EdgeInfo FindEdge(ViewCastInfo minViewcast, ViewCastInfo maxViewCast)
     {
         float minAngle = minViewcast.angle;
@@ -220,13 +215,13 @@ public class Guard_FieldOfView : MonoBehaviour {
     {
         Vector3 direction = DirFromAngle(globalAngle, true);
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, direction, out hit, viewRadius, obstacleMask))
+        if(Physics.Raycast(transform.position, direction, out hit, detectRadius, obstacleMask))
         {
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
         }
         else
         {
-            return new ViewCastInfo(false, transform.position + direction * viewRadius, viewRadius, globalAngle);
+            return new ViewCastInfo(false, transform.position + direction * detectRadius, detectRadius, globalAngle);
         }
     }
 
