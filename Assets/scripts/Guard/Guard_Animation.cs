@@ -39,11 +39,13 @@ public class Guard_Animation : MonoBehaviour {
     public void TurnRight()
     {
         anim.SetBool("turn right", true);
+        //anim.SetTrigger("turnRight");
     }
 
     public void TurnLeft()
     {
         anim.SetBool("turn left", true);
+        //anim.SetTrigger("turnLeft");
     }
 
     public void TurnOff()

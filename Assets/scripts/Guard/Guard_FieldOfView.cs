@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Guard_FieldOfView : MonoBehaviour {
-
+    
     public float detectRadius;
     public float viewRadius;
     [Range(0,360)]
@@ -25,8 +25,13 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     public Material enemyMat;
 
+    private GameObject menu;
+
+
     void Start()
     {
+        menu = GameObject.Find("Menu");
+
         detectMesh = new Mesh();
         viewMesh = new Mesh();
 
@@ -64,16 +69,21 @@ public class Guard_FieldOfView : MonoBehaviour {
             Transform target = targetsInViewRadius[i].transform;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             //check if angle between yourself and the target is less than  your view angle
-            //if(Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
             if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
             {
                 float distanceToTarget = Vector3.Distance(transform.position, target.position);
-
                 //raycast to target, to check if any obstacles are in the way
                 if(!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
                 {
-                    //trigger chase target............
-                    visibleTargets.Add(target);
+                    if(distanceToTarget <= viewRadius)
+                    {
+                        menu.gameObject.SendMessage("EndLevel", SendMessageOptions.DontRequireReceiver);
+                    }
+                    else
+                    {
+                        //you got detected so guard needs to run to you
+
+                    }
                 }
             }
         }
@@ -167,6 +177,7 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     }
 
+    //determines whether point is in close view or far view and adds points to both list accordingly
     void AddPoint(ref List<Vector3> viewPoints, ref List<Vector3> detectPoints, Vector3 point)
     {
         float distance = Vector3.Distance(transform.position, point);

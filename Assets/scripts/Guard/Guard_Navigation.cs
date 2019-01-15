@@ -100,7 +100,7 @@ public class Guard_Navigation : MonoBehaviour {
 
     public void TurnLeft90Degrees()
     {
-        transform.Rotate(new Vector3(0, 90, 0));
+        transform.Rotate(new Vector3(0, -90, 0));
     }
 
 }
