@@ -30,7 +30,7 @@ public class Guard_FieldOfView : MonoBehaviour {
 
     void Start()
     {
-        menu = GameObject.Find("Menu");
+        menu = GameObject.Find("Main Camera");
 
         detectMesh = new Mesh();
         viewMesh = new Mesh();

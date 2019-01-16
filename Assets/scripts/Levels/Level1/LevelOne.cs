@@ -14,13 +14,31 @@ public class LevelOne : MonoBehaviour
 
     public void EndLevel()
     {
-        Time.timeScale = 0;
-        transform.Find("Canvas").gameObject.SetActive(true);// = true;
+        //freeze time
+        FreezeTime();
+        GameObject.Find("Menu").transform.Find("Canvas").gameObject.SetActive(true);
+        //transform.Find("Canvas").gameObject.SetActive(true);// = true;
     }
 
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        ResumeTime();
+    }
 
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+        ResumeTime();
+    }
+
+    private void FreezeTime()
+    {
+        Time.timeScale = 0;
+    }
+
+    private void ResumeTime()
+    {
+        Time.timeScale = 1;
     }
 }
