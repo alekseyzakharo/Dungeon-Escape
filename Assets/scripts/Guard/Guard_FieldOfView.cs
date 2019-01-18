@@ -81,7 +81,7 @@ public class Guard_FieldOfView : MonoBehaviour {
                     }
                     else
                     {
-                        //you got detected so guard needs to run to you
+                        transform.parent.GetComponent<Guard_Navigation>().InvestigateArea(target.position);
 
                     }
                 }

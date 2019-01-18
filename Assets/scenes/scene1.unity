@@ -2529,6 +2529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrol: 1
   endPos: {fileID: 315166108}
+  currentState: 2
 --- !u!95 &582763750
 Animator:
   serializedVersion: 3
@@ -7334,6 +7335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrol: 1
   endPos: {fileID: 0}
+  currentState: 0
 --- !u!195 &1482971280
 NavMeshAgent:
   m_ObjectHideFlags: 0

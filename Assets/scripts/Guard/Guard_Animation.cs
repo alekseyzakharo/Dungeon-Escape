@@ -4,37 +4,58 @@ using UnityEngine;
 
 public class Guard_Animation : MonoBehaviour {
 
-    public bool sleep = false;
     [Range(0, 100)]
-    public float idleSpeed;
+    public float idleAnimSpeed;
+    [Range(0, 100)]
+    public float patrolAnimSpeed;
+    [Range(0, 100)]
+    public float runAnimSpeed;
 
     Animator anim;
 
 	// Use this for initialization
 	void Start () {
         anim = GetComponent<Animator>();
-        if (sleep)
+        switch (gameObject.GetComponent<Guard_Navigation>().currentState)
         {
-            sleep = true;
-            anim.SetBool("sleep", true);
+            case Guard_Navigation.States.sleeping:
+                Sleep();
+                break;
+            case Guard_Navigation.States.patrol:
+                Patrol();
+                break;
+            default:
+                break;
         }
-        else
-        {
-            anim.SetBool("idle", true);
-            anim.speed = idleSpeed / 100;
-            //access another script attached to this game object to check a bool val in it
-            if (gameObject.GetComponent<Guard_Navigation>().patrol)
-            {
-                anim.SetBool("walk", true);
-            }
-        }
+	}
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void Sleep()
+    {
+        anim.SetBool("sleep", true);
+    }
+
+    public void Patrol()
+    {
+        anim.SetBool("walk", true);
+        anim.speed = patrolAnimSpeed / 100;
+    }
+    public void Walk()
+    {
+        anim.SetBool("walk", true);
+    }
+
+    public void Run()
+    {
+        anim.SetBool("run", true);
+        anim.speed = runAnimSpeed / 100;
+    }
+
+    public void IdleInArea()
+    {
+        anim.SetBool("run", false);
+        anim.SetBool("walk", false);
+        anim.speed = idleAnimSpeed / 100;
+    }
 
     public void TurnRight()
     {
@@ -48,7 +69,7 @@ public class Guard_Animation : MonoBehaviour {
         //anim.SetTrigger("turnLeft");
     }
 
-    public void TurnOff()
+    public void TurnOffTurn()
     {
         anim.SetBool("turn right", false);
         anim.SetBool("turn left", false);
