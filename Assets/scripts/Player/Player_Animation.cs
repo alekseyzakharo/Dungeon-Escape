@@ -5,31 +5,38 @@ using UnityEngine;
 
 public class Player_Animation : MonoBehaviour {
 
+    
+    private bool buttonDown;
     Animator animator;
 	// Use this for initialization
 	void Start () {
         animator = transform.Find("T-pose_Player").GetComponent<Animator>();
-	}
+        buttonDown = false;
+
+        //make the button hold time just a bit longer than the time required for the nav to set a new location
+        StartCoroutine("CheckForButtonDown", Globals.navigationDelayTime * 0.95);
+    }
 	
 	void Update () {
-        float destinationDist = Globals.DistanceV3xz(Navigation.Destination, transform.position);
-        if(Input.GetKey(KeyCode.Mouse0))
+        if(Globals.DistanceV3xz(Navigation.Destination, transform.position) > Globals.CROUCHIDLE_EPSI)
         {
-            if(destinationDist > Globals.CROUCHIDLE_EPSI)
+            if (buttonDown)
             {
+                animator.SetBool("run", false);
                 animator.SetBool("crouch idle", false);
-                animator.SetBool("crouch walk", true);         
+                animator.SetBool("crouch walk", true);
             }
             else
             {
-                animator.SetBool("crouch idle", true);
+                animator.SetBool("crouch walk", false);
+                animator.SetBool("run", true);
             }
         }
         else
         {
-            if(destinationDist > Globals.CROUCHIDLE_EPSI)
+            if(buttonDown)
             {
-                animator.SetBool("run", true);
+                animator.SetBool("crouch idle", true);
             }
             else
             {
@@ -37,36 +44,48 @@ public class Player_Animation : MonoBehaviour {
                 animator.SetBool("crouch walk", false);
                 animator.SetBool("run", false);
             }
+
         }
 
 
-        //if(Navigation.inputPressed)
+        //float destinationDist = Globals.DistanceV3xz(Navigation.Destination, transform.position);
+        //if(Input.GetKey(KeyCode.Mouse0))
         //{
-        //    if(Navigation.CrouchIdle)
+        //    if(destinationDist > Globals.CROUCHIDLE_EPSI)
         //    {
-        //        animator.SetBool("crouch idle", true);
+        //        animator.SetBool("crouch idle", false);
+        //        animator.SetBool("crouch walk", true);         
         //    }
         //    else
         //    {
-        //        animator.SetBool("movement", false);
-        //        animator.SetBool("crouching", true);
+        //        animator.SetBool("crouch idle", true);
         //    }
         //}
         //else
         //{
-        //    if(Globals.DistanceV3xz(Navigation.Destination, transform.position) >= Globals.DISTANCE_EPSI)
+        //    if(destinationDist > Globals.CROUCHIDLE_EPSI)
         //    {
-        //        animator.SetBool("crouching", false);
-        //        animator.SetBool("movement", true);
+        //        animator.SetBool("run", true);
         //    }
         //    else
         //    {
         //        animator.SetBool("crouch idle", false);
-        //        animator.SetBool("crouching", false);
-        //        animator.SetBool("movement", false);
+        //        animator.SetBool("crouch walk", false);
+        //        animator.SetBool("run", false);
         //    }
         //}
     }
 
-
+    //constantly check if the button is pressed
+    IEnumerator CheckForButtonDown(float time)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(time);
+            if (Input.GetKey(KeyCode.Mouse0))
+                buttonDown = true;
+            else
+                buttonDown = false;
+        }
+    }
 }

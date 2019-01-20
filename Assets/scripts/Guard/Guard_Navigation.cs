@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class Guard_Navigation : MonoBehaviour {
-    
-    public enum States {idle, patrol, sleeping, investigate, returnToPatrol};
+
+    [HideInInspector]
+    public enum States {idle, patrol, turning, sleeping, investigate, returnToPatrol};
     public States currentState;
 
     public float investigateTime;
@@ -19,7 +20,7 @@ public class Guard_Navigation : MonoBehaviour {
     private Transform hips;
     private Vector3 currentDestination;
     private bool endDest = true;
-    private bool turning = false;
+    private Vector3 toVec;
     private Vector3 start;
     private Vector3 end;
 
@@ -49,55 +50,58 @@ public class Guard_Navigation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
-		if(currentState == States.patrol && endPos != null)
+        switch(currentState)
         {
-            if(Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
-            {
-                Vector3 toVec;
-                if(endDest)
-                    toVec = start - hips.position;
-                else
-                    toVec = end - hips.position;
-
-                if (!turning && Vector3.Angle(hips.forward, toVec) > 180)
+            case States.patrol:
+                if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
                 {
-                    animation.TurnRight(); //activate turn animation
-                    turning = true;
+                    if (endDest)
+                        toVec = start - hips.position;
+                    else
+                        toVec = end - hips.position;
+                    if (Vector3.Angle(hips.forward, toVec) > 180)
+                    {
+                        animation.TurnRight(); //activate turn right animation
+                        currentState = States.turning;
+                        break;
+                    }
+                    else
+                    {
+                        animation.TurnLeft(); //activate turn left animation
+                        currentState = States.turning;
+                        break;
+                    }
                 }
-                else if (!turning)
-                {
-                    animation.TurnLeft(); //activate turn animation
-                    turning = true;
-                }
-                if (IsFacingDirection(hips.forward, toVec))
+                break;
+            case States.turning:
+                if(IsFacingDirection(hips.forward, toVec))
                 {
                     animation.TurnOffTurn();
                     if (endDest)
-                        currentDestination = start;                    
+                        currentDestination = start;
                     else
                         currentDestination = end;
                     agent.SetDestination(currentDestination);
                     endDest = !endDest;
-                    turning = false;
+                    currentState = States.patrol;
                 }
-            }
-        }
-        else if(currentState == States.investigate)
-        {
-            if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
-            {
-                animation.IdleInArea();
-                agent.speed = walkSpeed;
-                Invoke("GoBackToPatrol", investigateTime);
-            }
-        }
-        else if(currentState == States.returnToPatrol)
-        {
-            if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
-            {
-                currentState = States.patrol;
-            }
+                break;
+            case States.investigate:
+                if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
+                {
+                    animation.IdleInArea();
+                    agent.speed = walkSpeed;
+                    Invoke("GoBackToPatrol", investigateTime);
+                }
+                break;
+            case States.returnToPatrol:
+                if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
+                {
+                    currentState = States.patrol;
+                }
+                break;
+            default:
+                break;
         }
 	}
 
@@ -117,7 +121,6 @@ public class Guard_Navigation : MonoBehaviour {
         currentDestination = start;   
         agent.SetDestination(currentDestination);
         animation.Walk();
-        turning = false;
         endDest = false;
     }
 

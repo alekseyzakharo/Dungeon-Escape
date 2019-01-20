@@ -2513,8 +2513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aa127ba93461c141b42478898e44832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sleep: 0
-  idleSpeed: 75
+  idleAnimSpeed: 100
+  patrolAnimSpeed: 75
+  runAnimSpeed: 100
 --- !u!114 &582763749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2527,9 +2528,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8604af305492e24d9880626ce4b8420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrol: 1
+  currentState: 1
+  investigateTime: 3
+  walkSpeed: 1.6
+  runSpeed: 4
   endPos: {fileID: 315166108}
-  currentState: 2
 --- !u!95 &582763750
 Animator:
   serializedVersion: 3
@@ -5568,7 +5571,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24f3093ebbd4195428656da3c4a8fa0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NewDestinationDelay: 20
   RunSpeed: 5
   CrouchSpeed: 2.4
 --- !u!195 &1171002296
@@ -7320,8 +7322,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aa127ba93461c141b42478898e44832, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sleep: 0
-  idleSpeed: 0
+  idleAnimSpeed: 0
+  patrolAnimSpeed: 0
+  runAnimSpeed: 0
 --- !u!114 &1482971278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7333,9 +7336,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8604af305492e24d9880626ce4b8420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrol: 1
-  endPos: {fileID: 0}
   currentState: 0
+  investigateTime: 0
+  walkSpeed: 0
+  runSpeed: 0
+  endPos: {fileID: 0}
 --- !u!195 &1482971280
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9030,7 +9035,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   visibleTargets: []
-  meshResolution: 1
+  meshResolution: 3
   edgeResolveIterations: 10
   detectMeshFilter: {fileID: 1469350398}
   viewMeshFilter: {fileID: 936960841}

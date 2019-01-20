@@ -5,22 +5,21 @@ using UnityEngine.AI;
 
 public class Navigation : MonoBehaviour {
 
-    public static Vector3 Destination;
-    public static bool RunCrouch;
-    public static bool CrouchIdle;
+    [HideInInspector]
+    public enum States { idle, running, crouching, crouchRunning};
+    private States currentState;
 
-    public static bool inputPressed;
+    public static Vector3 Destination;
 
     NavMeshAgent agent;
     [Range(0,100)]
-    public float NewDestinationDelay = 0;
+
     public float RunSpeed = 5;
     public float CrouchSpeed = 3;
 
 	// Use this for initialization
 	void Start () {
-        RunCrouch = false;
-        CrouchIdle = false;
+
         agent = GetComponent<NavMeshAgent>();
         Destination = transform.position;
 	}
@@ -51,7 +50,7 @@ public class Navigation : MonoBehaviour {
 
     IEnumerator SetNewDestination(Vector3 destination)
     {
-        yield return new WaitForSeconds(NewDestinationDelay/100);
+        yield return new WaitForSeconds(Globals.navigationDelayTime);
         SetDestination(destination);
     }
 
