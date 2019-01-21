@@ -107,6 +107,7 @@ public class Guard_Navigation : MonoBehaviour {
 
     public void InvestigateArea(Vector3 area)
     {
+        CancelInvoke("GoBackToPatrol");
         animation.TurnOffTurn();
         currentState = States.investigate;
         currentDestination = area;

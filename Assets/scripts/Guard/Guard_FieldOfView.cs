@@ -82,7 +82,6 @@ public class Guard_FieldOfView : MonoBehaviour {
                     else
                     {
                         transform.parent.GetComponent<Guard_Navigation>().InvestigateArea(target.position);
-
                     }
                 }
             }
