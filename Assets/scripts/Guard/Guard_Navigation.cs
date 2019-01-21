@@ -22,11 +22,7 @@ public class Guard_Navigation : MonoBehaviour {
     private bool endDest = true;
     private Vector3 toVec;
     private Vector3 start;
-    private Vector3 end;
-
-    //Investigate Vars
-    private bool investigating;
-    
+    private Vector3 end;  
 
     private new Guard_Animation animation;
     NavMeshAgent agent;
@@ -108,6 +104,7 @@ public class Guard_Navigation : MonoBehaviour {
     public void InvestigateArea(Vector3 area)
     {
         CancelInvoke("GoBackToPatrol");
+        animation.Attention();
         animation.TurnOffTurn();
         currentState = States.investigate;
         currentDestination = area;
@@ -123,6 +120,7 @@ public class Guard_Navigation : MonoBehaviour {
         agent.SetDestination(currentDestination);
         animation.Walk();
         endDest = false;
+        animation.AttentionOff();
     }
 
 

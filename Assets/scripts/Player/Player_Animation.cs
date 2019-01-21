@@ -12,8 +12,6 @@ public class Player_Animation : MonoBehaviour {
         StartCoroutine("SetAnimation", Globals.navigationDelayTime);
     }
 
-
-
     public void CrouchWalk()
     {
         animator.SetBool("run", false);

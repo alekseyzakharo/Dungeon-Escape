@@ -10,12 +10,16 @@ public class Guard_Animation : MonoBehaviour {
     public float patrolAnimSpeed;
     [Range(0, 100)]
     public float runAnimSpeed;
+    [Range(0, 100)]
+    public float guardAttentionIconTime;
 
+    GameObject ExclamationMark;
     Animator anim;
 
 	// Use this for initialization
 	void Start () {
         anim = GetComponent<Animator>();
+        ExclamationMark = transform.Find("Hips/Spine/Spine1/Spine2/Neck/Head/HeadTop_End/Exclamation Mark").gameObject;
         switch (gameObject.GetComponent<Guard_Navigation>().currentState)
         {
             case Guard_Navigation.States.sleeping:
@@ -75,5 +79,15 @@ public class Guard_Animation : MonoBehaviour {
         anim.SetBool("turn left", false);
     }
 
+    public void Attention()
+    {
+        ExclamationMark.SetActive(true);
+        
+    }
+
+    public void AttentionOff()
+    {
+        ExclamationMark.SetActive(false);
+    }
 
 }
