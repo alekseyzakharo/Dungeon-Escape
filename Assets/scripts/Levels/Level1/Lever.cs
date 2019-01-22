@@ -10,6 +10,9 @@ public class Lever : MonoBehaviour
     [Range(0,100)]
     public float lineWidth;
     public Material lineMat;
+    public GameObject triggerObj;
+    [Range(0, 100)]
+    public float leverAnimationSpeed;
 
     LineRenderer circle;
     Vector3[] points;
@@ -20,7 +23,6 @@ public class Lever : MonoBehaviour
     public float yIncrement;
 
     private bool pulled;
-    private bool leverAnimationComplete;
     //hard coded angles derived from best looking positions from camera angle
     private float stopLeverAngle = 160;
     Transform metalHandle;
@@ -35,9 +37,7 @@ public class Lever : MonoBehaviour
         y = lowestPointBounce;
 
         points = CalcualteCirclePoints(numOfPoints, radius);
-
         pulled = false;
-        leverAnimationComplete = false;
         metalHandle = transform.Find("metal_handle");
 
     }
@@ -56,16 +56,7 @@ public class Lever : MonoBehaviour
             {
                 points[i].y = y;
                 circle.SetPosition(i, points[i]);
-            }
-            
-        }
-        else if(!leverAnimationComplete)
-        {
-            metalHandle.Rotate(transform.right, -1);
-            if(metalHandle.localRotation.y == stopLeverAngle)
-            {
-                leverAnimationComplete = true;
-            }
+            }        
         }
 	}
 
@@ -84,11 +75,33 @@ public class Lever : MonoBehaviour
         return vec;
     }
 
-    public void LeverPull()
+    private void OnMouseOver()
     {
-        pulled = true;
-        //trigger door to glow
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(!pulled)
+            {
+                if (Globals.DistanceV3xz(GameObject.Find("Player").transform.position, transform.position) <= Globals.TRIGGER_DISTANCE)
+                {
+                    //trigger lever animation
+                    StartCoroutine("LeverAnimation", leverAnimationSpeed / 100);
+                    triggerObj.gameObject.SendMessage("Trigger", SendMessageOptions.DontRequireReceiver);
+                    pulled = true;
+                    circle.enabled = !circle.enabled; //turn off the circle animation
+                }
+            }
+        }
     }
 
-    
+    IEnumerator LeverAnimation(float time)
+    {
+        //hard coded angle determined from 
+        while (metalHandle.eulerAngles.z > stopLeverAngle)
+        {
+            yield return new WaitForSeconds(time);
+            metalHandle.Rotate(new Vector3(0, 0, 1), -1);
+            
+        }
+    }
+
 }

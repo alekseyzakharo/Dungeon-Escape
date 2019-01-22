@@ -15,6 +15,8 @@ public static class Globals {
 
     public const float navigationDelayTime = 0.2f;
 
+    public const float TRIGGER_DISTANCE = 5f;
+
     public static float DistanceV3xz(Vector3 a, Vector3 b)
     {
         float x = a.x - b.x;
