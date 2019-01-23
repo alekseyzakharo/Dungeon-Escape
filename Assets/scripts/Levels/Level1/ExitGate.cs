@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ExitGate : MonoBehaviour {
 
-
     public float maxHeight;
     [Range(0,100)]
     public float gateAnimSpeed;
@@ -15,15 +14,11 @@ public class ExitGate : MonoBehaviour {
 	void Start () {
         maxHeight += transform.position.y;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void Trigger()
     {
         StartCoroutine("GateAnimation", gateAnimSpeed / 100);
+        TurnOnGuidingLight();
     }
 
     IEnumerator GateAnimation(float time)
@@ -35,5 +30,11 @@ public class ExitGate : MonoBehaviour {
             yield return new WaitForSeconds(time);
             transform.Translate(0, inc, 0);
         }
+    }
+
+
+    private void TurnOnGuidingLight()
+    {
+        transform.Find("Guiding Light").gameObject.SetActive(true);
     }
 }

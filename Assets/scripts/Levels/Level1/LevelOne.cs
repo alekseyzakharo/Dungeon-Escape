@@ -5,19 +5,43 @@ using UnityEngine.SceneManagement;
 
 public class LevelOne : MonoBehaviour
 {
+    GameObject found, paused, mainSettings;
+
+    private bool levelPause;
 
     // Use this for initialization
     void Start()
     {
-
+        levelPause = false;
+        found = GameObject.Find("Menu/Canvas/Found");
+        paused = GameObject.Find("Menu/Canvas/Paused");
+        mainSettings = GameObject.Find("Menu/Canvas/MainSettings");
     }
 
     public void EndLevel()
     {
         //freeze time
         FreezeTime();
-        GameObject.Find("Menu").transform.Find("Canvas").gameObject.SetActive(true);
-        //transform.Find("Canvas").gameObject.SetActive(true);// = true;
+        found.SetActive(true);
+        mainSettings.SetActive(true);
+    }
+
+    public void Pause()
+    {
+        if(!levelPause)
+        {
+            FreezeTime();
+            paused.SetActive(true);
+            mainSettings.SetActive(true);
+            levelPause = true;
+        }
+        else
+        {
+            paused.SetActive(false);
+            mainSettings.SetActive(false);
+            ResumeTime();
+            levelPause = false;
+        }
     }
 
     public void RestartLevel()
