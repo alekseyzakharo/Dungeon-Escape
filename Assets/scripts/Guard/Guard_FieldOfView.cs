@@ -134,46 +134,41 @@ public class Guard_FieldOfView : MonoBehaviour {
         int[] detectTriangles = new int[(detectVertextCount - 2) * 3];
 
         viewVertices[0] = Vector3.zero;
-        int iterator = 0;
+
+        int midPointHelper = viewPoints.Count; ;
         for (int i = 0; i < viewVertexCount - 1; i++)
         {
             viewVertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+            detectVertices[i] = viewVertices[i + 1];
+            detectVertices[midPointHelper + i] = transform.InverseTransformPoint(detectPoints[i]);
+
             if (i < viewVertexCount - 2)
             {
                 viewTriangles[i * 3] = 0;
                 viewTriangles[i * 3 + 1] = i + 1;
                 viewTriangles[i * 3 + 2] = i + 2;
+
+                detectTriangles[i * 6] = i;
+                detectTriangles[i * 6 + 1] = midPointHelper + i;
+                detectTriangles[i * 6 + 2] = midPointHelper + 1 + i;
+
+                detectTriangles[i * 6 + 3] = i;
+                detectTriangles[i * 6 + 4] = midPointHelper + 1 + i;
+                detectTriangles[i * 6 + 5] = i + 1;
+
             }
-
-            detectVertices[iterator++] = transform.InverseTransformPoint(viewPoints[i]);
-            detectVertices[iterator++] = transform.InverseTransformPoint(detectPoints[i]);
-
         }
+        //draw close mesh
         viewMesh.Clear();
         viewMesh.vertices = viewVertices;
         viewMesh.triangles = viewTriangles;
         viewMesh.RecalculateNormals();
 
-        for(int i = 0;i < detectVertextCount - 1;i+=2)
-        {
-
-            if(i < detectVertextCount - 2)
-            {
-                detectTriangles[i * 3] = i;
-                detectTriangles[i * 3 + 1] = i + 1;
-                detectTriangles[i * 3 + 2] = i + 3;
-
-                detectTriangles[i * 3 + 3] = i;
-                detectTriangles[i * 3 + 4] = i + 3;
-                detectTriangles[i * 3 + 5] = i + 2;
-            }
-        }
-
+        //draw far mesh
         detectMesh.Clear();
         detectMesh.vertices = detectVertices;
         detectMesh.triangles = detectTriangles;
         detectMesh.RecalculateNormals();
-
     }
 
     //determines whether point is in close view or far view and adds points to both list accordingly

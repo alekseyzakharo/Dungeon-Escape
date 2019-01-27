@@ -30,6 +30,7 @@ public class Guard_Animation : MonoBehaviour {
         {
             case Guard_Navigation.States.sleeping:
                 Sleep();
+                transform.Find("Hips").GetComponent<Guard_FieldOfView>().gameObject.SetActive(false);
                 break;
             case Guard_Navigation.States.patrol:
                 Patrol();
