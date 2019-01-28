@@ -36,6 +36,5 @@ sysinfo.txt
 *.unitypackage
 
 # gif files
-*.gif
 *.png
 *.png.meta
