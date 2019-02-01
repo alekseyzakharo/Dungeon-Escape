@@ -6,8 +6,10 @@ using UnityEngine.AI;
 public class Guard_Navigation : MonoBehaviour {
 
     [HideInInspector]
-    public enum States {idle, patrol, turning, sleeping, investigate, returnToPatrol};
+    public enum States {idle, patrol, turning, sleeping, investigate, returnToStartPosition};
+
     public States currentState;
+    private States nextState;
 
     public float investigateTime;
 
@@ -22,7 +24,10 @@ public class Guard_Navigation : MonoBehaviour {
     private bool endDest = true;
     private Vector3 toVec;
     private Vector3 start;
-    private Vector3 end;  
+    private Vector3 end;
+
+    private GameObject fieldOfView;
+    private IEnumerator returnToStart = null;
 
     private new Guard_Animation animation;
     NavMeshAgent agent;
@@ -31,6 +36,7 @@ public class Guard_Navigation : MonoBehaviour {
 	void Start () {
         animation = GetComponent<Guard_Animation>();
         agent = GetComponent<NavMeshAgent>();
+        fieldOfView = transform.Find("Hips").GetComponent<Guard_FieldOfView>().gameObject;
         agent.speed = walkSpeed;
 
         start = transform.position;
@@ -41,6 +47,10 @@ public class Guard_Navigation : MonoBehaviour {
             end = endPos.position;
             currentDestination = endPos.position;
             agent.SetDestination(currentDestination);
+        }
+        else if(currentState == States.sleeping)
+        {
+            fieldOfView.SetActive(false);
         }
     }
 	
@@ -87,13 +97,26 @@ public class Guard_Navigation : MonoBehaviour {
                 {
                     animation.IdleInArea();
                     agent.speed = walkSpeed;
-                    Invoke("GoBackToPatrol", investigateTime);
+                    returnToStart = ReturnToInitialState(nextState);
+                    StartCoroutine(returnToStart);
                 }
                 break;
-            case States.returnToPatrol:
+            case States.returnToStartPosition:
                 if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
                 {
-                    currentState = States.patrol;
+                    switch(nextState)
+                    {
+                        case States.patrol:
+                            currentState = nextState;
+                            break;
+                        case States.sleeping:
+                            fieldOfView.SetActive(false);
+                            animation.WalkOff();
+                            animation.Sleep();
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 break;
             default:
@@ -101,11 +124,23 @@ public class Guard_Navigation : MonoBehaviour {
         }
 	}
 
-    public void InvestigateArea(Vector3 area)
+    public void InvestigateArea(Vector3 area, States nextState)
     {
-        CancelInvoke("GoBackToPatrol");
+        if(returnToStart != null)
+            StopCoroutine(returnToStart);
+        this.nextState = nextState;
         animation.Attention();
-        animation.TurnOffTurn();
+        switch (currentState)
+        {
+            case States.turning:
+                animation.TurnOffTurn();
+                break;
+            case States.sleeping:
+                fieldOfView.SetActive(true);
+                break;
+            default:
+                break;
+        }
         currentState = States.investigate;
         currentDestination = area;
         agent.SetDestination(currentDestination);
@@ -113,9 +148,10 @@ public class Guard_Navigation : MonoBehaviour {
         animation.Run();
     }
 
-    private void GoBackToPatrol()
+    IEnumerator ReturnToInitialState(States state)
     {
-        currentState = States.returnToPatrol;
+        yield return new WaitForSeconds(investigateTime);
+        currentState = States.returnToStartPosition;
         currentDestination = start;   
         agent.SetDestination(currentDestination);
         animation.Walk();

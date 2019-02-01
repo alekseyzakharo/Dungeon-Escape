@@ -18,19 +18,35 @@ public class Guard_Animation : MonoBehaviour {
 
     GameObject ExclamationMark;
     GameObject SleepMark;
+
     Animator anim;
 
-	// Use this for initialization
-	void Start () {
+    public LayerMask obstacleMask;
+    public LayerMask targetMask;
+    public float lineWidth;
+    public Material lineMat;
+    public int numOfPoints;
+    public float heightFromFloor;
+    public float radius;
+    LineRenderer circle;
+    IEnumerator sleepCheck;
+
+    // Use this for initialization
+    void Start () {
         anim = GetComponent<Animator>();
+        circle = GetComponent<LineRenderer>();
+        circle.material = lineMat;
+        circle.widthMultiplier = lineWidth / 100;
+        circle.positionCount = numOfPoints + 1;
+
         ExclamationMark = transform.Find("Hips/Spine/Spine1/Spine2/Neck/Head/HeadTop_End/Exclamation Mark").gameObject;
         //entry animation is idle
         anim.speed = idleAnimSpeed / 100;
+        sleepCheck = ListenForEnemy(0.2f);
         switch (gameObject.GetComponent<Guard_Navigation>().currentState)
         {
             case Guard_Navigation.States.sleeping:
                 Sleep();
-                transform.Find("Hips").GetComponent<Guard_FieldOfView>().gameObject.SetActive(false);
                 break;
             case Guard_Navigation.States.patrol:
                 Patrol();
@@ -42,7 +58,16 @@ public class Guard_Animation : MonoBehaviour {
 
     public void Sleep()
     {
+        CalcualteCirclePoints(numOfPoints);
+        circle.gameObject.SetActive(true);
         anim.SetBool("sleep", true);
+        StartCoroutine(ListenForEnemy(0.2f));
+    }
+
+    public void WakeUp()
+    {
+        circle.gameObject.SetActive(false);
+        anim.SetBool("sleep", false);
     }
 
     public void Patrol()
@@ -53,6 +78,11 @@ public class Guard_Animation : MonoBehaviour {
     public void Walk()
     {
         anim.SetBool("walk", true);
+    }
+
+    public void WalkOff()
+    {
+        anim.SetBool("walk", false);
     }
 
     public void Run()
@@ -94,15 +124,45 @@ public class Guard_Animation : MonoBehaviour {
         ExclamationMark.SetActive(false);
     }
 
-    //IEnumerator CheckForButtonDown(float time)
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(time);
-    //        if (Input.GetKey(KeyCode.Mouse0))
-    //            buttonDown = true;
-    //        else
-    //            buttonDown = false;
-    //    }
-    //}
+    private void CalcualteCirclePoints(int numOfPoints)
+    {
+        float theta = (2 * Mathf.PI) / numOfPoints;
+        for (int i = 0; i < numOfPoints + 1; i++)
+        {
+            float angle = theta * i;
+            Vector3 direction = new Vector3(Mathf.Sin(angle), 0, Mathf.Cos(angle));
+            RaycastHit hit;
+            Vector3 point;
+            if (Physics.Raycast(transform.position, direction, out hit, radius, obstacleMask))
+                point = hit.point;
+            else
+                point = transform.position + direction * radius;
+
+            point.y = heightFromFloor;
+            circle.SetPosition(i, point);
+        }
+    }
+
+    IEnumerator ListenForEnemy(float time)
+    {
+        bool run = true;
+        while (run)
+        {
+            yield return new WaitForSeconds(time);
+            Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, radius, targetMask);
+            for (int i = 0; i < targetsInViewRadius.Length; i++)
+            {
+                Transform target = targetsInViewRadius[i].transform;
+                Vector3 direction = (target.position - transform.position).normalized;
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+                if (!Physics.Raycast(transform.position, direction, distanceToTarget, obstacleMask))
+                {
+                    WakeUp();
+                    yield return new WaitForSeconds(2f);
+                    transform.GetComponent<Guard_Navigation>().InvestigateArea(target.position, Guard_Navigation.States.sleeping);
+                    run = false;
+                }
+            }
+        }
+    }
 }
