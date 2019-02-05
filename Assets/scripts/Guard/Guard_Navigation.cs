@@ -5,17 +5,15 @@ using UnityEngine.AI;
 
 public class Guard_Navigation : MonoBehaviour {
 
+    const float EPSI_ANGLE = 5.0f;
+
     [HideInInspector]
     public enum States {idle, patrol, turning, sleeping, investigate, returnToStartPosition};
 
     public States currentState;
     private States nextState;
 
-    public float investigateTime;
-
-    public float walkSpeed = 1.6f;
-    public float runSpeed;
-
+    public float investigateTime, walkSpeed, runSpeed;
     public Transform endPos;
 
     //Patrolling Vars
@@ -26,63 +24,71 @@ public class Guard_Navigation : MonoBehaviour {
     private Vector3 start;
     private Vector3 end;
 
-    private GameObject fieldOfView;
+    //private Guard_FieldOfView fieldOfView;
+
+    public GameObject fieldOfView;
+
     private IEnumerator returnToStart = null;
 
-    private new Guard_Animation animation;
+    Guard_Animation anim;
     NavMeshAgent agent;
 
 	// Use this for initialization
 	void Start () {
-        animation = GetComponent<Guard_Animation>();
+        anim = GetComponent<Guard_Animation>();
         agent = GetComponent<NavMeshAgent>();
-        fieldOfView = transform.Find("Hips").GetComponent<Guard_FieldOfView>().gameObject;
+
+        //fieldOfView = transform.Find("Hips/FieldOfView").GetComponent<Guard_FieldOfView>();
+
         agent.speed = walkSpeed;
 
         start = transform.position;
+
         hips = transform.Find("Hips");
 
-        if(currentState == States.patrol)
+        if (currentState == States.patrol)
         {
             end = endPos.position;
             currentDestination = endPos.position;
             agent.SetDestination(currentDestination);
         }
-        else if(currentState == States.sleeping)
+        else if (currentState == States.sleeping)
         {
+            //fieldOfView.enabled = false;
             fieldOfView.SetActive(false);
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         switch(currentState)
         {
             case States.patrol:
-                if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
+                //if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
+                if(ReachedDestination())
                 {
                     if (endDest)
                         toVec = start - hips.position;
                     else
                         toVec = end - hips.position;
-                    if (Vector3.Angle(hips.forward, toVec) > 180)
+                    if (Vector3.Angle(hips.forward, toVec) < 180)
                     {
-                        animation.TurnRight(); //activate turn right animation
+                        anim.TurnRight(); //activate turn right animation
                         currentState = States.turning;
                         break;
                     }
                     else
                     {
-                        animation.TurnLeft(); //activate turn left animation
+                        anim.TurnLeft(); //activate turn left animation
                         currentState = States.turning;
                         break;
                     }
                 }
                 break;
             case States.turning:
-                if(IsFacingDirection(hips.forward, toVec))
+                if (ReachedDestination())
                 {
-                    animation.TurnOffTurn();
+                    anim.TurnOffTurn();
                     if (endDest)
                         currentDestination = start;
                     else
@@ -93,30 +99,32 @@ public class Guard_Navigation : MonoBehaviour {
                 }
                 break;
             case States.investigate:
-                if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
+                if (ReachedDestination())
                 {
-                    animation.IdleInArea();
+                    anim.IdleInArea();
                     agent.speed = walkSpeed;
                     returnToStart = ReturnToInitialState(nextState);
                     StartCoroutine(returnToStart);
                 }
                 break;
             case States.returnToStartPosition:
-                if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
+                if (ReachedDestination())
                 {
                     switch(nextState)
                     {
                         case States.patrol:
-                            currentState = nextState;
+                            
                             break;
                         case States.sleeping:
+                            //fieldOfView.enabled = false;
                             fieldOfView.SetActive(false);
-                            animation.WalkOff();
-                            animation.Sleep();
+                            anim.WalkOff();
+                            anim.Sleep();
                             break;
                         default:
                             break;
                     }
+                    currentState = nextState;
                 }
                 break;
             default:
@@ -129,13 +137,14 @@ public class Guard_Navigation : MonoBehaviour {
         if(returnToStart != null)
             StopCoroutine(returnToStart);
         this.nextState = nextState;
-        animation.Attention();
+        anim.Attention();
         switch (currentState)
         {
             case States.turning:
-                animation.TurnOffTurn();
+                anim.TurnOffTurn();
                 break;
             case States.sleeping:
+                //fieldOfView.enabled = true;
                 fieldOfView.SetActive(true);
                 break;
             default:
@@ -143,9 +152,9 @@ public class Guard_Navigation : MonoBehaviour {
         }
         currentState = States.investigate;
         currentDestination = area;
-        agent.SetDestination(currentDestination);
         agent.speed = runSpeed;
-        animation.Run();
+        agent.SetDestination(currentDestination);
+        anim.Run();
     }
 
     IEnumerator ReturnToInitialState(States state)
@@ -154,16 +163,30 @@ public class Guard_Navigation : MonoBehaviour {
         currentState = States.returnToStartPosition;
         currentDestination = start;   
         agent.SetDestination(currentDestination);
-        animation.Walk();
+        anim.Walk();
         endDest = false;
-        animation.AttentionOff();
+        anim.AttentionOff();
     }
 
+    public bool ReachedDestination()
+    {
+        //if(agent.pathPending)
+        //{
+            if(agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if(!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    return true;
+                }
+            }
+        //}
+        return false;
+    }
 
     //return true if the angle between the 2 vectors is less than EPSI_ANGLE
     private bool IsFacingDirection(Vector3 a, Vector3 b)
     {
-        return Vector3.Angle(a, b) < Globals.EPSI_ANGLE;
+        return Vector3.Angle(a, b) < EPSI_ANGLE;
     }
 
     public void TurnRight90Degrees()

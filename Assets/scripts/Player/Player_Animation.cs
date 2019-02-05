@@ -9,7 +9,7 @@ public class Player_Animation : MonoBehaviour {
     void Start () {
         animator = transform.Find("T-pose_Player").GetComponent<Animator>();
         nav = GetComponent<Navigation>();
-        StartCoroutine("SetAnimation", Globals.navigationDelayTime);
+        StartCoroutine("SetAnimation", Navigation.NAVDELAYTIME);
     }
 
     public void CrouchWalk()

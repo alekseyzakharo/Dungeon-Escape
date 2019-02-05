@@ -15,9 +15,9 @@ TagManager:
   - 
   - Ground
   - Obstacles
-  - Targets
-  - Hidden
-  - 
+  - Crouch
+  - Idle
+  - Target
   - 
   - 
   - 

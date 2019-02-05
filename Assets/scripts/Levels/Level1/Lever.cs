@@ -75,23 +75,23 @@ public class Lever : MonoBehaviour
         return vec;
     }
 
-    private void OnMouseOver()
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            if(!pulled)
-            {
-                if (Globals.DistanceV3xz(GameObject.Find("Player").transform.position, transform.position) <= Globals.TRIGGER_DISTANCE)
-                {
-                    //trigger lever animation
-                    StartCoroutine("LeverAnimation", leverAnimationSpeed / 100);
-                    triggerObj.gameObject.SendMessage("Trigger", SendMessageOptions.DontRequireReceiver);
-                    pulled = true;
-                    circle.enabled = !circle.enabled; //turn off the circle animation
-                }
-            }
-        }
-    }
+    //private void OnMouseOver()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        if (!pulled)
+    //        {
+    //            if (Globals.DistanceV3xz(GameObject.Find("Player").transform.position, transform.position) <= Globals.TRIGGER_DISTANCE)
+    //            {
+    //                //trigger lever animation
+    //                StartCoroutine("LeverAnimation", leverAnimationSpeed / 100);
+    //                triggerObj.gameObject.SendMessage("Trigger", SendMessageOptions.DontRequireReceiver);
+    //                pulled = true;
+    //                circle.enabled = !circle.enabled; //turn off the circle animation
+    //            }
+    //        }
+    //    }
+    //}
 
     IEnumerator LeverAnimation(float time)
     {

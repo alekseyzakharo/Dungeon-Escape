@@ -10,8 +10,6 @@ public class Guard_Animation : MonoBehaviour {
     public float patrolAnimSpeed;
     [Range(0, 100)]
     public float runAnimSpeed;
-    [Range(0, 100)]
-    public float guardAttentionIconTime;
 
     [Range(0,100)]
     public float sleepAnimSpeed;
@@ -29,12 +27,12 @@ public class Guard_Animation : MonoBehaviour {
     public float heightFromFloor;
     public float radius;
     LineRenderer circle;
-    IEnumerator sleepCheck;
 
     // Use this for initialization
     void Start () {
         anim = GetComponent<Animator>();
         circle = GetComponent<LineRenderer>();
+
         circle.material = lineMat;
         circle.widthMultiplier = lineWidth / 100;
         circle.positionCount = numOfPoints + 1;
@@ -42,7 +40,7 @@ public class Guard_Animation : MonoBehaviour {
         ExclamationMark = transform.Find("Hips/Spine/Spine1/Spine2/Neck/Head/HeadTop_End/Exclamation Mark").gameObject;
         //entry animation is idle
         anim.speed = idleAnimSpeed / 100;
-        sleepCheck = ListenForEnemy(0.2f);
+
         switch (gameObject.GetComponent<Guard_Navigation>().currentState)
         {
             case Guard_Navigation.States.sleeping:
@@ -54,19 +52,19 @@ public class Guard_Animation : MonoBehaviour {
             default:
                 break;
         }
-	}
+    }
 
     public void Sleep()
     {
         CalcualteCirclePoints(numOfPoints);
-        circle.gameObject.SetActive(true);
+        circle.enabled = true;
         anim.SetBool("sleep", true);
         StartCoroutine(ListenForEnemy(0.2f));
     }
 
     public void WakeUp()
     {
-        circle.gameObject.SetActive(false);
+        circle.enabled = false;
         anim.SetBool("sleep", false);
     }
 
@@ -158,11 +156,14 @@ public class Guard_Animation : MonoBehaviour {
                 if (!Physics.Raycast(transform.position, direction, distanceToTarget, obstacleMask))
                 {
                     WakeUp();
+                    Vector3 loc = target.position;
                     yield return new WaitForSeconds(2f);
-                    transform.GetComponent<Guard_Navigation>().InvestigateArea(target.position, Guard_Navigation.States.sleeping);
+                    transform.GetComponent<Guard_Navigation>().InvestigateArea(loc, Guard_Navigation.States.sleeping);
                     run = false;
                 }
             }
         }
     }
+
+    
 }

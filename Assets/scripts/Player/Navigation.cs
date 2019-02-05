@@ -5,6 +5,9 @@ using UnityEngine.AI;
 
 public class Navigation : MonoBehaviour
 {
+    public const float NAVDELAYTIME = 0.2f;
+    public const float CROUCHIDLE_EPSI = 0.2f;
+
     [HideInInspector]
     public enum States { idle, running, crouchIdle, crouchWalk };
     public States currentState;
@@ -17,8 +20,7 @@ public class Navigation : MonoBehaviour
     public float RunSpeed = 5;
     public float CrouchSpeed = 3;
 
-    LayerMask Hidden;
-    LayerMask NotHidden;
+    LayerMask Crouch, Idle, Target;
 
     private bool buttonDown;
     private float navDelaySlower = 0.95f;
@@ -30,11 +32,12 @@ public class Navigation : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
 
-        Hidden = LayerMask.NameToLayer("Hidden");
-        NotHidden = LayerMask.NameToLayer("Targets");
+        Crouch = LayerMask.NameToLayer("Crouch");
+        Idle = LayerMask.NameToLayer("Idle");
+        Target = LayerMask.NameToLayer("Target");
 
         Destination = transform.position;
-        StartCoroutine("CheckForButtonDown", Globals.navigationDelayTime * navDelaySlower);
+        StartCoroutine("CheckForButtonDown", NAVDELAYTIME * navDelaySlower);
     }
 
     // Update is called once per frame
@@ -53,7 +56,7 @@ public class Navigation : MonoBehaviour
                 if (path.status == NavMeshPathStatus.PathComplete)
                 {
                     //check that distance of new click is greater than CrouchIdle_Epsi, to prevent floating around
-                    if (Globals.DistanceV3xz(transform.position, hit.point) >= Globals.CROUCHIDLE_EPSI)
+                    if (DistanceV3xz(transform.position, hit.point) >= CROUCHIDLE_EPSI)
                     {
                         StartCoroutine("SetNewDestination", hit.point);
                     }
@@ -62,19 +65,19 @@ public class Navigation : MonoBehaviour
         }
 
         //Update player into the correct state
-        if(Globals.DistanceV3xz(Destination, transform.position) > Globals.CROUCHIDLE_EPSI)
+        if(DistanceV3xz(Destination, transform.position) > CROUCHIDLE_EPSI)
         {
             if (buttonDown && Input.GetKey(KeyCode.Mouse0))
             {
                 //crouch walk
                 currentState = States.crouchWalk;
-                gameObject.layer = Hidden;
+                gameObject.layer = Crouch;
             }
             else
             {
                 //run
                 currentState = States.running;
-                gameObject.layer = NotHidden;
+                gameObject.layer = Target;
             }
         }
         else
@@ -83,20 +86,20 @@ public class Navigation : MonoBehaviour
             {
                 //crouch idle
                 currentState = States.crouchIdle;
-                gameObject.layer = Hidden;
+                gameObject.layer = Crouch;
             }
             else
             {
                 //idle
                 currentState = States.idle;
-                gameObject.layer = NotHidden;
+                gameObject.layer = Idle;
             }
         }
     }
           
     IEnumerator SetNewDestination(Vector3 destination)
     {
-        yield return new WaitForSeconds(Globals.navigationDelayTime);
+        yield return new WaitForSeconds(NAVDELAYTIME);
         SetDestination(destination);
     }
 
@@ -117,5 +120,12 @@ public class Navigation : MonoBehaviour
             else
                 buttonDown = false;
         }
+    }
+
+    private float DistanceV3xz(Vector3 a, Vector3 b)
+    {
+        float x = a.x - b.x;
+        float z = a.z - b.z;
+        return Mathf.Sqrt((x * x) + (z * z));
     }
 }
