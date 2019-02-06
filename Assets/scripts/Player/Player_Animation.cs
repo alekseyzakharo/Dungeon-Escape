@@ -6,9 +6,15 @@ using UnityEngine;
 public class Player_Animation : MonoBehaviour {
     Animator animator;
     private Navigation nav;
-    void Start () {
+
+    private void Awake()
+    {
         animator = transform.Find("T-pose_Player").GetComponent<Animator>();
         nav = GetComponent<Navigation>();
+    }
+
+    void Start ()
+    {
         StartCoroutine("SetAnimation", Navigation.NAVDELAYTIME);
     }
 

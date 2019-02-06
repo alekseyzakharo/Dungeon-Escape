@@ -761,7 +761,7 @@ GameObject:
   - component: {fileID: 174974479}
   - component: {fileID: 174974480}
   m_Layer: 0
-  m_Name: FieldOfView1
+  m_Name: FieldOfView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -911,7 +911,7 @@ GameObject:
   - component: {fileID: 201246615}
   - component: {fileID: 201246616}
   m_Layer: 0
-  m_Name: FieldOfView2
+  m_Name: FieldOfView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2846,9 +2846,9 @@ GameObject:
   - component: {fileID: 582763747}
   - component: {fileID: 582763750}
   - component: {fileID: 582763749}
+  - component: {fileID: 582763748}
   - component: {fileID: 582763751}
   - component: {fileID: 582763752}
-  - component: {fileID: 582763748}
   m_Layer: 0
   m_Name: Guard1
   m_TagString: Untagged
@@ -2884,7 +2884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idleAnimSpeed: 75
-  patrolAnimSpeed: 100
+  patrolAnimSpeed: 60
   runAnimSpeed: 100
   sleepAnimSpeed: 100
   obstacleMask:
@@ -2910,12 +2910,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8604af305492e24d9880626ce4b8420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
+  currentState: 1
   investigateTime: 3
   walkSpeed: 1.6
   runSpeed: 4
   endPos: {fileID: 315166108}
-  fieldOfView: {fileID: 0}
 --- !u!95 &582763750
 Animator:
   serializedVersion: 3
@@ -7155,9 +7154,9 @@ GameObject:
   - component: {fileID: 1482971276}
   - component: {fileID: 1482971279}
   - component: {fileID: 1482971278}
+  - component: {fileID: 1482971277}
   - component: {fileID: 1482971280}
   - component: {fileID: 1482971281}
-  - component: {fileID: 1482971277}
   m_Layer: 0
   m_Name: Guard2
   m_TagString: Untagged
@@ -7222,7 +7221,6 @@ MonoBehaviour:
   walkSpeed: 1.6
   runSpeed: 4
   endPos: {fileID: 150115628}
-  fieldOfView: {fileID: 201246614}
 --- !u!95 &1482971279
 Animator:
   serializedVersion: 3

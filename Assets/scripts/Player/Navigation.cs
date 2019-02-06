@@ -10,28 +10,36 @@ public class Navigation : MonoBehaviour
 
     [HideInInspector]
     public enum States { idle, running, crouchIdle, crouchWalk };
+    [HideInInspector]
     public States currentState;
 
     public static Vector3 Destination;
 
     NavMeshAgent agent;
-    [Range(0, 100)]
 
+    [Range(0, 10)]
     public float RunSpeed = 5;
+    [Range(0, 10)]
     public float CrouchSpeed = 3;
 
     LayerMask Crouch, Idle, Target;
 
+    private GameObject LevelObj, NextLevelSquare;
+
     private bool buttonDown;
     private float navDelaySlower = 0.95f;
+
+    void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        LevelObj = GameObject.Find("Main Camera");
+        NextLevelSquare = GameObject.Find("NextLevel");
+    }
 
     // Use this for initialization
     void Start()
     {
         currentState = States.idle;
-
-        agent = GetComponent<NavMeshAgent>();
-
         Crouch = LayerMask.NameToLayer("Crouch");
         Idle = LayerMask.NameToLayer("Idle");
         Target = LayerMask.NameToLayer("Target");
@@ -96,7 +104,16 @@ public class Navigation : MonoBehaviour
             }
         }
     }
-          
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.Equals(NextLevelSquare))
+        {
+            LevelObj.SendMessage("NextLevel", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+  
+
     IEnumerator SetNewDestination(Vector3 destination)
     {
         yield return new WaitForSeconds(NAVDELAYTIME);

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Guard_FieldOfView : MonoBehaviour {
-    
-    public float detectRadius;
-    public float viewRadius;
+
+    public const float FINDTARGETSDELAY = 0.2f;
+
+    public float detectRadius, viewRadius;
     [Range(0,360)]
     public float viewAngle;
 
-    public LayerMask targetMask;
-    public LayerMask obstacleMask;
+    public LayerMask targetMask, obstacleMask;
 
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
@@ -18,20 +18,32 @@ public class Guard_FieldOfView : MonoBehaviour {
     public float meshResolution;
     public int edgeResolveIterations;
 
-    public MeshFilter detectMeshFilter;
-    public MeshFilter viewMeshFilter;
-    Mesh detectMesh;
-    Mesh viewMesh;
+    public MeshFilter detectMeshFilter, viewMeshFilter;
+    Mesh detectMesh, viewMesh;
 
     public Material enemyMat;
-
     private GameObject menu;
 
+    IEnumerator findTargets;
+    private bool targetSearch;
+
+    private void Awake()
+    {
+        menu = GameObject.Find("In-GameMenu");
+    }
+
+    private void OnEnable()
+    {
+        detectMeshFilter.gameObject.SetActive(true);
+        viewMeshFilter.gameObject.SetActive(true);
+
+        targetSearch = true;
+        findTargets = FindTargetsWithDelay(FINDTARGETSDELAY);
+        StartCoroutine(findTargets);
+    }
 
     void Start()
     {
-        menu = GameObject.Find("Main Camera");
-
         detectMesh = new Mesh();
         viewMesh = new Mesh();
 
@@ -40,8 +52,6 @@ public class Guard_FieldOfView : MonoBehaviour {
 
         detectMeshFilter.mesh = detectMesh;
         viewMeshFilter.mesh = viewMesh;
-
-        StartCoroutine("FindTargetsWithDelay", 0.2f);
     }
 
     void Update()
@@ -50,9 +60,16 @@ public class Guard_FieldOfView : MonoBehaviour {
         
     }
 
+    private void OnDisable()
+    {
+        targetSearch = false;
+        detectMeshFilter.gameObject.SetActive(false);
+        viewMeshFilter.gameObject.SetActive(false);
+    }
+
     IEnumerator FindTargetsWithDelay(float delay)
     {
-        while (true)
+        while (targetSearch)
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTarget();

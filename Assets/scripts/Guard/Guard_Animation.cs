@@ -28,16 +28,20 @@ public class Guard_Animation : MonoBehaviour {
     public float radius;
     LineRenderer circle;
 
-    // Use this for initialization
-    void Start () {
+    private void Awake()
+    {
         anim = GetComponent<Animator>();
         circle = GetComponent<LineRenderer>();
+        ExclamationMark = transform.Find("Hips/Spine/Spine1/Spine2/Neck/Head/HeadTop_End/Exclamation Mark").gameObject;
+    }
 
+    // Use this for initialization
+    void Start ()
+    {
         circle.material = lineMat;
         circle.widthMultiplier = lineWidth / 100;
         circle.positionCount = numOfPoints + 1;
 
-        ExclamationMark = transform.Find("Hips/Spine/Spine1/Spine2/Neck/Head/HeadTop_End/Exclamation Mark").gameObject;
         //entry animation is idle
         anim.speed = idleAnimSpeed / 100;
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Lever : MonoBehaviour
 {
+    [HideInInspector]
+    public const float TRIGGERDISTANCE = 5f;
 
     public float radius;
     public int numOfPoints;
@@ -17,7 +19,7 @@ public class Lever : MonoBehaviour
     LineRenderer circle;
     Vector3[] points;
 
-    float y;
+    private float ringHeight;
     public float highestPointBounce;
     public float lowestPointBounce;
     public float yIncrement;
@@ -27,34 +29,38 @@ public class Lever : MonoBehaviour
     private float stopLeverAngle = 160;
     Transform metalHandle;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
         circle = GetComponent<LineRenderer>();
+    }
+
+    // Use this for initialization
+    void Start () {
+
         circle.material = lineMat;
         circle.widthMultiplier = lineWidth / 100;
         circle.positionCount = numOfPoints+1;
 
-        y = lowestPointBounce;
+        ringHeight = lowestPointBounce;
 
         points = CalcualteCirclePoints(numOfPoints, radius);
         pulled = false;
         metalHandle = transform.Find("metal_handle");
-
     }
 	
 	// Update is called once per frame
 	void Update () {
         if(!pulled)
         {
-            if (y < lowestPointBounce || y > highestPointBounce)
+            if (ringHeight < lowestPointBounce || ringHeight > highestPointBounce)
             {
                 yIncrement *= -1;
             }
-            y += yIncrement;
+            ringHeight += yIncrement;
 
             for(int i = 0 ; i < numOfPoints + 1 ; i++)
             {
-                points[i].y = y;
+                points[i].y = ringHeight;
                 circle.SetPosition(i, points[i]);
             }        
         }
@@ -70,28 +76,28 @@ public class Lever : MonoBehaviour
         {
             x = rad * Mathf.Cos(i);
             z = rad * Mathf.Sin(i);
-            vec[iterator++] = new Vector3(x, y, z) + transform.position;
+            vec[iterator++] = new Vector3(x, lowestPointBounce, z) + transform.position;
         }
         return vec;
     }
 
-    //private void OnMouseOver()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        if (!pulled)
-    //        {
-    //            if (Globals.DistanceV3xz(GameObject.Find("Player").transform.position, transform.position) <= Globals.TRIGGER_DISTANCE)
-    //            {
-    //                //trigger lever animation
-    //                StartCoroutine("LeverAnimation", leverAnimationSpeed / 100);
-    //                triggerObj.gameObject.SendMessage("Trigger", SendMessageOptions.DontRequireReceiver);
-    //                pulled = true;
-    //                circle.enabled = !circle.enabled; //turn off the circle animation
-    //            }
-    //        }
-    //    }
-    //}
+    private void OnMouseOver()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!pulled)
+            {
+                if (DistanceV3xz(GameObject.Find("Player").transform.position, transform.position) <= TRIGGERDISTANCE)
+                {
+                    //trigger lever animation
+                    StartCoroutine("LeverAnimation", leverAnimationSpeed / 100);
+                    triggerObj.gameObject.SendMessage("Trigger", SendMessageOptions.DontRequireReceiver);
+                    pulled = true;
+                    circle.enabled = !circle.enabled; //turn off the circle animation
+                }
+            }
+        }
+    }
 
     IEnumerator LeverAnimation(float time)
     {
@@ -102,6 +108,13 @@ public class Lever : MonoBehaviour
             metalHandle.Rotate(new Vector3(0, 0, 1), -1);
             
         }
+    }
+
+    private float DistanceV3xz(Vector3 a, Vector3 b)
+    {
+        float x = a.x - b.x;
+        float z = a.z - b.z;
+        return Mathf.Sqrt((x * x) + (z * z));
     }
 
 }

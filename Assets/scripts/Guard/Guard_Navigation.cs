@@ -18,34 +18,28 @@ public class Guard_Navigation : MonoBehaviour {
 
     //Patrolling Vars
     private Transform hips;
-    private Vector3 currentDestination;
     private bool endDest = true;
-    private Vector3 toVec;
-    private Vector3 start;
-    private Vector3 end;
+    private Vector3 currentDestination, toVec, start, end;
 
-    //private Guard_FieldOfView fieldOfView;
-
-    public GameObject fieldOfView;
+    private Guard_FieldOfView fieldOfView;
 
     private IEnumerator returnToStart = null;
 
     Guard_Animation anim;
     NavMeshAgent agent;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
         anim = GetComponent<Guard_Animation>();
         agent = GetComponent<NavMeshAgent>();
-
-        //fieldOfView = transform.Find("Hips/FieldOfView").GetComponent<Guard_FieldOfView>();
-
-        agent.speed = walkSpeed;
-
-        start = transform.position;
-
+        fieldOfView = transform.Find("Hips/FieldOfView").GetComponent<Guard_FieldOfView>();
         hips = transform.Find("Hips");
+    }
 
+    void Start ()
+    {
+        agent.speed = walkSpeed;
+        start = transform.position;
         if (currentState == States.patrol)
         {
             end = endPos.position;
@@ -54,8 +48,8 @@ public class Guard_Navigation : MonoBehaviour {
         }
         else if (currentState == States.sleeping)
         {
-            //fieldOfView.enabled = false;
-            fieldOfView.SetActive(false);
+            fieldOfView.enabled = false;
+            //fieldOfView.SetActive(false);
         }
     }
 
@@ -64,7 +58,6 @@ public class Guard_Navigation : MonoBehaviour {
         switch(currentState)
         {
             case States.patrol:
-                //if (Globals.DistanceV3xz(transform.position, currentDestination) <= Globals.EPSI)
                 if(ReachedDestination())
                 {
                     if (endDest)
@@ -86,7 +79,7 @@ public class Guard_Navigation : MonoBehaviour {
                 }
                 break;
             case States.turning:
-                if (ReachedDestination())
+                if (Vector3.Angle(hips.forward, toVec) < EPSI_ANGLE)
                 {
                     anim.TurnOffTurn();
                     if (endDest)
@@ -116,8 +109,8 @@ public class Guard_Navigation : MonoBehaviour {
                             
                             break;
                         case States.sleeping:
-                            //fieldOfView.enabled = false;
-                            fieldOfView.SetActive(false);
+                            fieldOfView.enabled = false;
+                            //fieldOfView.SetActive(false);
                             anim.WalkOff();
                             anim.Sleep();
                             break;
@@ -144,8 +137,8 @@ public class Guard_Navigation : MonoBehaviour {
                 anim.TurnOffTurn();
                 break;
             case States.sleeping:
-                //fieldOfView.enabled = true;
-                fieldOfView.SetActive(true);
+                fieldOfView.enabled = true;
+                //fieldOfView.SetActive(true);
                 break;
             default:
                 break;
@@ -170,8 +163,8 @@ public class Guard_Navigation : MonoBehaviour {
 
     public bool ReachedDestination()
     {
-        //if(agent.pathPending)
-        //{
+        if(!agent.pathPending)
+        {
             if(agent.remainingDistance <= agent.stoppingDistance)
             {
                 if(!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
@@ -179,14 +172,8 @@ public class Guard_Navigation : MonoBehaviour {
                     return true;
                 }
             }
-        //}
+        }
         return false;
-    }
-
-    //return true if the angle between the 2 vectors is less than EPSI_ANGLE
-    private bool IsFacingDirection(Vector3 a, Vector3 b)
-    {
-        return Vector3.Angle(a, b) < EPSI_ANGLE;
     }
 
     public void TurnRight90Degrees()
