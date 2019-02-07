@@ -26,7 +26,7 @@ public class Navigation : MonoBehaviour
 
     private GameObject LevelObj, NextLevelSquare;
 
-    private bool buttonDown;
+    private bool buttonDown, canMove;
     private float navDelaySlower = 0.95f;
 
     void Awake()
@@ -44,6 +44,8 @@ public class Navigation : MonoBehaviour
         Idle = LayerMask.NameToLayer("Idle");
         Target = LayerMask.NameToLayer("Target");
 
+        canMove = false;
+
         Destination = transform.position;
         StartCoroutine("CheckForButtonDown", NAVDELAYTIME * navDelaySlower);
     }
@@ -52,7 +54,7 @@ public class Navigation : MonoBehaviour
     void Update()
     {
         //new click on map
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && canMove)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -104,16 +106,7 @@ public class Navigation : MonoBehaviour
             }
         }
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.Equals(NextLevelSquare))
-        {
-            LevelObj.SendMessage("NextLevel", SendMessageOptions.DontRequireReceiver);
-        }
-    }
-  
-
+ 
     IEnumerator SetNewDestination(Vector3 destination)
     {
         yield return new WaitForSeconds(NAVDELAYTIME);
@@ -124,6 +117,16 @@ public class Navigation : MonoBehaviour
     {
         agent.SetDestination(destination);
         Destination = destination;
+    }
+
+    public void SetDest(Vector3 destination)
+    {
+        StartCoroutine("SetNewDestination", destination);
+    }
+
+    public void AllowMovement()
+    {
+        canMove = true;
     }
 
     //constantly check if the button is pressed
@@ -145,4 +148,6 @@ public class Navigation : MonoBehaviour
         float z = a.z - b.z;
         return Mathf.Sqrt((x * x) + (z * z));
     }
+
+
 }
