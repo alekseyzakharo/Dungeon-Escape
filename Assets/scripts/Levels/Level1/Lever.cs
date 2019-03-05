@@ -13,6 +13,7 @@ public class Lever : MonoBehaviour
     public float lineWidth;
     public Material lineMat;
     public GameObject triggerObj;
+    public string triggerMethodName;
     [Range(0, 100)]
     public float leverAnimationSpeed;
 
@@ -91,7 +92,7 @@ public class Lever : MonoBehaviour
                 {
                     //trigger lever animation
                     StartCoroutine("LeverAnimation", leverAnimationSpeed / 100);
-                    triggerObj.gameObject.SendMessage("Trigger", SendMessageOptions.DontRequireReceiver);
+                    triggerObj.gameObject.SendMessage(triggerMethodName, SendMessageOptions.DontRequireReceiver);
                     pulled = true;
                     circle.enabled = !circle.enabled; //turn off the circle animation
                 }

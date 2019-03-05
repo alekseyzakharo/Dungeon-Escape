@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EndLevel : MonoBehaviour {
+public class EndLevel1 : MonoBehaviour {
 
     private GameObject LevelObj, player;
 
