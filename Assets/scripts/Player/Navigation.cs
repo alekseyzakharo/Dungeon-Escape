@@ -17,17 +17,12 @@ public class Navigation : MonoBehaviour
 
     NavMeshAgent agent;
 
-    [Range(0, 10)]
-    public float RunSpeed = 5;
-    [Range(0, 10)]
-    public float CrouchSpeed = 3;
-
     LayerMask Crouch, Idle, Target;
 
     private GameObject LevelObj, NextLevelSquare;
 
     private bool buttonDown, canMove;
-    private float navDelaySlower = 0.95f;
+    private const float navDelaySlower = 0.95f;
 
     void Awake()
     {
@@ -54,7 +49,7 @@ public class Navigation : MonoBehaviour
     void Update()
     {
         //new click on map
-        if (Input.GetMouseButtonDown(0) && canMove)
+        if (Input.GetMouseButton(0) && canMove)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
